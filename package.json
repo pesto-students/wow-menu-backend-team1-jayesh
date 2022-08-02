@@ -23,12 +23,14 @@
     "dependencies": {
         "dotenv": "^16.0.1",
         "esm": "^3.2.25",
-        "express": "^4.18.1"
+        "express": "^4.18.1",
+        "joi": "^17.6.0",
+        "mongoose": "^6.5.0"
     },
     "devDependencies": {
-        "nodemon": "^2.0.19",
         "eslint": "^8.20.0",
         "eslint-config-prettier": "^8.5.0",
+        "nodemon": "^2.0.19",
         "prettier": "^2.7.1",
         "rimraf": "^3.0.2"
     }
