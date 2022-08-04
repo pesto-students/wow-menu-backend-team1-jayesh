@@ -1,15 +1,12 @@
 import Joi from 'joi'
-import { MenuItems } from '../models'
+import { Categories } from '../models'
 
-const menuItemsController = {
+const categoriesController = {
     async get(req, res, next) {
         const validationSchema = Joi.object({
             restaurant_code: Joi.string().required(),
             category: Joi.string(),
-            is_available: Joi.bool(),
             is_active: Joi.bool(),
-            is_veg: Joi.bool(),
-            spicy: Joi.string(),
         })
 
         const { error } = await validationSchema.validate(req.query)
@@ -18,7 +15,7 @@ const menuItemsController = {
         }
 
         try {
-            const data = await MenuItems.find()
+            const data = await Categories.find()
             res.status(200).json({ status: true, data: data })
         } catch (error) {
             return next(error)
@@ -27,7 +24,7 @@ const menuItemsController = {
 
     async getById(req, res, next) {
         try {
-            const data = await MenuItems.findById(req.params.id)
+            const data = await Categories.findById(req.params.id)
             res.status(200).json({ status: true, data: data })
         } catch (error) {
             return next(error)
@@ -36,16 +33,8 @@ const menuItemsController = {
 
     async post(req, res, next) {
         const validationSchema = Joi.object({
-            name: Joi.string().required(),
-            description: Joi.string().required(),
-            price: Joi.number().required(),
-            discounted_price: Joi.number(),
             category: Joi.string().required(),
-            is_available: Joi.bool(),
             is_active: Joi.bool(),
-            is_veg: Joi.bool(),
-            spicy: Joi.string(),
-            image_url: Joi.string(),
             created_by: Joi.string().required(),
             restaurant_code: Joi.number().required(),
         })
@@ -55,17 +44,9 @@ const menuItemsController = {
             return next(error)
         }
 
-        const data = new MenuItems({
-            name: req.body.name,
-            description: req.body.description,
-            price: req.body.price,
-            discounted_price: req.body.discounted_price,
+        const data = new Categories({
             category: req.body.category,
-            is_available: req.body.is_available,
             is_active: req.body.is_active,
-            is_veg: req.body.is_veg,
-            spicy: req.body.spicy,
-            image_url: req.body.image_url,
             created_by: req.body.created_by,
             restaurant_code: req.body.restaurant_code,
         })
@@ -73,7 +54,7 @@ const menuItemsController = {
         try {
             await data.save()
             res.status(201).json({
-                message: 'Menu item successfully added',
+                message: 'Category successfully added',
                 status: true,
                 data: req.body,
             })
@@ -86,16 +67,8 @@ const menuItemsController = {
         try {
             const id = req.params.id
             const validationSchema = Joi.object({
-                name: Joi.string(),
-                description: Joi.string(),
-                price: Joi.number(),
-                discounted_price: Joi.number(),
                 category: Joi.string(),
-                is_available: Joi.bool(),
                 is_active: Joi.bool(),
-                is_veg: Joi.bool(),
-                spicy: Joi.string(),
-                image_url: Joi.string(),
                 created_by: Joi.string()
             })
 
@@ -106,13 +79,13 @@ const menuItemsController = {
 
             const options = { new: true }
 
-            const result = await MenuItems.findByIdAndUpdate(
+            const result = await Categories.findByIdAndUpdate(
                 id,
                 req.body,
                 options
             )
             res.status(200).json({
-                message: 'Menu item is updated successfully',
+                message: 'Category successfully updated',
                 status: true,
                 data: result,
             })
@@ -124,9 +97,9 @@ const menuItemsController = {
     async delete(req, res, next) {
         try {
             const id = req.params.id
-            const { name } = await MenuItems.findByIdAndDelete(id)
+            const { category } = await Categories.findByIdAndDelete(id)
             res.status(200).json({
-                message: `Menu item successfully deleted with name ${name}`,
+                message: `Category ${category} successfully deleted`,
                 status: true,
             })
         } catch (error) {
@@ -135,4 +108,4 @@ const menuItemsController = {
     }
 }
 
-export default menuItemsController
+export default categoriesController
