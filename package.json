@@ -5,6 +5,8 @@
     "main": "server.js",
     "scripts": {
         "dev": "nodemon -r esm server.js",
+        "build": "./build.sh",
+        "start": "node -r esm server.js",
         "format:check": "prettier --check .",
         "format:write": "prettier --write .",
         "lint:check": "eslint .",

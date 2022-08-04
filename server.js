@@ -15,4 +15,6 @@ app.use(express.json())
 app.use('/api', routes)
 
 app.use(errorHandler)
-app.listen(APP_PORT, () => console.log(`Listening on port ${APP_PORT}`))
+
+const port = process.env.PORT || APP_PORT
+app.listen(port, () => console.log(`Listening on port ${port}`))
