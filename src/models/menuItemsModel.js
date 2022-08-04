@@ -6,10 +6,13 @@ const dataSchema = new mongoose.Schema(
             required: true,
             type: String,
             unique: true,
+            trim: true,
+            lowercase: true
         },
         description: {
             required: false,
             type: String,
+            trim: true
         },
         price: {
             required: true,
@@ -22,6 +25,8 @@ const dataSchema = new mongoose.Schema(
         category: {
             required: true,
             type: String,
+            lowercase: true,
+            trim:true
         },
         is_active: {
             required: false,
@@ -30,7 +35,7 @@ const dataSchema = new mongoose.Schema(
         },
         is_available: {
             required: false,
-            type: String,
+            type: Boolean,
             default: true,
         },
         is_veg: {
@@ -40,6 +45,8 @@ const dataSchema = new mongoose.Schema(
         spicy: {
             required: false,
             type: String,
+            lowercase: true,
+            trim:true
         },
         image_url: {
             required: false,
@@ -60,6 +67,7 @@ const dataSchema = new mongoose.Schema(
     },
     {
         timestamps: true,
+        versionKey: false
     }
 )
 

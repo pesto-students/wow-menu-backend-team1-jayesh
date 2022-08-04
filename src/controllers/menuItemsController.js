@@ -19,7 +19,18 @@ const menuItemsController = {
 
         try {
             const data = await MenuItems.find()
-            res.status(200).json({ status: true, data: data })
+            let finalData = {}
+            let key = '';
+            for(let i = 0; i < data.length; i++) {
+                key = data[i]['category']
+                if(key in finalData) {
+                    finalData[key].push(data[i])
+                }
+                else {
+                    finalData[key] = [data[i]]
+                }
+            }
+            res.status(200).json({ status: true, data: finalData })
         } catch (error) {
             return next(error)
         }
@@ -46,8 +57,7 @@ const menuItemsController = {
             is_veg: Joi.bool(),
             spicy: Joi.string(),
             image_url: Joi.string(),
-            created_by: Joi.string().required(),
-            restaurant_code: Joi.number().required(),
+            restaurant_code: Joi.number().required()
         })
 
         const { error } = await validationSchema.validate(req.body)
@@ -66,7 +76,7 @@ const menuItemsController = {
             is_veg: req.body.is_veg,
             spicy: req.body.spicy,
             image_url: req.body.image_url,
-            created_by: req.body.created_by,
+            created_by: 'admin', //todo get the created_by through the token
             restaurant_code: req.body.restaurant_code,
         })
 
@@ -95,8 +105,7 @@ const menuItemsController = {
                 is_active: Joi.bool(),
                 is_veg: Joi.bool(),
                 spicy: Joi.string(),
-                image_url: Joi.string(),
-                created_by: Joi.string()
+                image_url: Joi.string()
             })
 
             const { error } = await validationSchema.validate(req.body)
@@ -105,6 +114,8 @@ const menuItemsController = {
             }
 
             const options = { new: true }
+
+            req.body.created_by = 'admin'  //todo get the created_by through the token
 
             const result = await MenuItems.findByIdAndUpdate(
                 id,
