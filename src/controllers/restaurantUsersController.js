@@ -1,12 +1,17 @@
 import Joi from 'joi'
-import { Categories } from '../models'
+import { RestaurantUsers } from '../models'
+import bcrypt from 'bcrypt'
 
-const categoriesController = {
+const restaurantUsersController = {
     async get(req, res, next) {
         const validationSchema = Joi.object({
-            restaurant_code: Joi.string().required(),
-            category: Joi.string(),
-            is_active: Joi.bool(),
+            username: Joi.string(),
+            email_id: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'in'] } }),
+            password: Joi.string(),
+            is_admin: Joi.bool(),
+            role: Joi.string(),
+            created_by: Joi.string(),
+            restaurant_code: Joi.number().required(),
         })
 
         const { error } = await validationSchema.validate(req.query)
@@ -15,7 +20,7 @@ const categoriesController = {
         }
 
         try {
-            const data = await Categories.find()
+            const data = await RestaurantUsers.find()
             res.status(200).json({ status: true, data: data })
         } catch (error) {
             return next(error)
@@ -24,7 +29,7 @@ const categoriesController = {
 
     async getById(req, res, next) {
         try {
-            const data = await Categories.findById(req.params.id)
+            const data = await RestaurantUsers.findById(req.params.id)
             res.status(200).json({ status: true, data: data })
         } catch (error) {
             return next(error)
@@ -33,10 +38,13 @@ const categoriesController = {
 
     async post(req, res, next) {
         const validationSchema = Joi.object({
-            category: Joi.string().required(),
-            is_active: Joi.bool(),
+            username: Joi.string().required(),
+            email_id: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'in'] } }).required(),
+            password: Joi.string().required(),
+            is_admin: Joi.bool(),
+            role: Joi.string().required(),
             created_by: Joi.string().required(),
-            restaurant_code: Joi.number().required(),
+            restaurant_code: Joi.number().required()
         })
 
         const { error } = await validationSchema.validate(req.body)
@@ -44,9 +52,14 @@ const categoriesController = {
             return next(error)
         }
 
-        const data = new Categories({
-            category: req.body.category,
-            is_active: req.body.is_active,
+        const hashedPassword = await bcrypt.hash(req.body.password, 10)
+
+        const data = new RestaurantUsers({
+            username: req.body.username,
+            email_id: req.body.email_id,
+            password: hashedPassword,
+            is_admin: req.body.is_admin,
+            role: req.body.role,
             created_by: req.body.created_by,
             restaurant_code: req.body.restaurant_code,
         })
@@ -54,7 +67,7 @@ const categoriesController = {
         try {
             await data.save()
             res.status(201).json({
-                message: 'Category successfully added',
+                message: 'User successfully added',
                 status: true,
                 data: req.body,
             })
@@ -67,9 +80,10 @@ const categoriesController = {
         try {
             const id = req.params.id
             const validationSchema = Joi.object({
-                category: Joi.string(),
-                is_active: Joi.bool(),
-                created_by: Joi.string()
+                email_id: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'in'] } }),
+                password: Joi.string(),
+                is_admin: Joi.bool(),
+                role: req.body.role
             })
 
             const { error } = await validationSchema.validate(req.body)
@@ -79,13 +93,17 @@ const categoriesController = {
 
             const options = { new: true }
 
-            const result = await Categories.findByIdAndUpdate(
+            if (typeof req.body.password !== 'undefined') {
+                req.body.password = await bcrypt.hash(req.body.password, 10)
+            }
+
+            const result = await RestaurantUsers.findByIdAndUpdate(
                 id,
                 req.body,
                 options
             )
             res.status(200).json({
-                message: 'Category successfully updated',
+                message: 'User is updated successfully',
                 status: true,
                 data: result,
             })
@@ -97,15 +115,16 @@ const categoriesController = {
     async delete(req, res, next) {
         try {
             const id = req.params.id
-            const { category } = await Categories.findByIdAndDelete(id)
+            const { username } = await RestaurantUsers.findByIdAndDelete(id)
             res.status(200).json({
-                message: `Category ${category} successfully deleted`,
+                message: `User successfully deleted with name ${username}`,
                 status: true,
             })
         } catch (error) {
             return next(error)
         }
     }
+
 }
 
-export default categoriesController
+export default restaurantUsersController

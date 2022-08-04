@@ -73,7 +73,7 @@ const menuItemsController = {
         try {
             await data.save()
             res.status(201).json({
-                message: 'Data successfully stored',
+                message: 'Menu item successfully added',
                 status: true,
                 data: req.body,
             })
@@ -112,7 +112,7 @@ const menuItemsController = {
                 options
             )
             res.status(200).json({
-                message: 'Data successfully updated',
+                message: 'Menu item is updated successfully',
                 status: true,
                 data: result,
             })
@@ -126,7 +126,7 @@ const menuItemsController = {
             const id = req.params.id
             const { name } = await MenuItems.findByIdAndDelete(id)
             res.status(200).json({
-                message: `Data successfully deleted with name ${name}`,
+                message: `Menu item successfully deleted with name ${name}`,
                 status: true,
             })
         } catch (error) {

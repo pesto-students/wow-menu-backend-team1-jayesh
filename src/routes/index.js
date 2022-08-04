@@ -1,5 +1,5 @@
 import express from 'express'
-import { menuItemsController, categoriesController } from '../controllers'
+import { menuItemsController, categoriesController, restaurantUsersController } from '../controllers'
 
 const router = express.Router()
 
@@ -14,5 +14,11 @@ router.get('/categories/:id', categoriesController.getById)
 router.post('/categories', categoriesController.post)
 router.patch('/categories/:id', categoriesController.update)
 router.delete('/categories/:id', categoriesController.delete)
+
+router.get('/restaurant-users', restaurantUsersController.get)
+router.get('/restaurant-users/:id', restaurantUsersController.getById)
+router.post('/restaurant-users', restaurantUsersController.post)
+router.patch('/restaurant-users/:id', restaurantUsersController.update)
+router.delete('/restaurant-users/:id', restaurantUsersController.delete)
 
 export default router
