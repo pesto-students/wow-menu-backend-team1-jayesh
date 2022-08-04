@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cp .env.production .env
+cp .env.staging .env
 
 npm i
