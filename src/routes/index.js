@@ -1,5 +1,9 @@
 import express from 'express'
-import { menuItemsController, categoriesController, restaurantUsersController } from '../controllers'
+import {
+    menuItemsController,
+    categoriesController,
+    restaurantUsersController,
+} from '../controllers'
 
 const router = express.Router()
 

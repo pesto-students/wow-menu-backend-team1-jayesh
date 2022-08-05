@@ -7,11 +7,6 @@ const dataSchema = new mongoose.Schema(
             type: String,
             unique: true,
         },
-        email_id: {
-            required: true,
-            type: String,
-            unique: true,
-        },
         password: {
             required: true,
             type: String,
@@ -19,7 +14,7 @@ const dataSchema = new mongoose.Schema(
         is_admin: {
             required: false,
             type: Boolean,
-            default: false
+            default: false,
         },
         role: {
             required: true,
@@ -32,7 +27,7 @@ const dataSchema = new mongoose.Schema(
         restaurant_code: {
             required: true,
             type: String,
-        }
+        },
     },
     {
         timestamps: true,

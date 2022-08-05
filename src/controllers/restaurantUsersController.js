@@ -6,8 +6,6 @@ const restaurantUsersController = {
     async get(req, res, next) {
         const validationSchema = Joi.object({
             username: Joi.string(),
-            email_id: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'in'] } }),
-            password: Joi.string(),
             is_admin: Joi.bool(),
             role: Joi.string(),
             created_by: Joi.string(),
@@ -20,7 +18,7 @@ const restaurantUsersController = {
         }
 
         try {
-            const data = await RestaurantUsers.find()
+            const data = await RestaurantUsers.find(req.query)
             res.status(200).json({ status: true, data: data })
         } catch (error) {
             return next(error)
@@ -39,12 +37,10 @@ const restaurantUsersController = {
     async post(req, res, next) {
         const validationSchema = Joi.object({
             username: Joi.string().required(),
-            email_id: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'in'] } }).required(),
             password: Joi.string().required(),
             is_admin: Joi.bool(),
             role: Joi.string().required(),
-            created_by: Joi.string().required(),
-            restaurant_code: Joi.number().required()
+            restaurant_code: Joi.number().required(),
         })
 
         const { error } = await validationSchema.validate(req.body)
@@ -56,11 +52,10 @@ const restaurantUsersController = {
 
         const data = new RestaurantUsers({
             username: req.body.username,
-            email_id: req.body.email_id,
             password: hashedPassword,
             is_admin: req.body.is_admin,
             role: req.body.role,
-            created_by: req.body.created_by,
+            created_by: 'admin',
             restaurant_code: req.body.restaurant_code,
         })
 
@@ -80,10 +75,9 @@ const restaurantUsersController = {
         try {
             const id = req.params.id
             const validationSchema = Joi.object({
-                email_id: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'in'] } }),
                 password: Joi.string(),
                 is_admin: Joi.bool(),
-                role: req.body.role
+                role: req.body.role,
             })
 
             const { error } = await validationSchema.validate(req.body)
@@ -123,8 +117,7 @@ const restaurantUsersController = {
         } catch (error) {
             return next(error)
         }
-    }
-
+    },
 }
 
 export default restaurantUsersController

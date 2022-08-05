@@ -7,12 +7,12 @@ const dataSchema = new mongoose.Schema(
             type: String,
             unique: true,
             trim: true,
-            lowercase: true
+            lowercase: true,
         },
         description: {
             required: false,
             type: String,
-            trim: true
+            trim: true,
         },
         price: {
             required: true,
@@ -26,7 +26,7 @@ const dataSchema = new mongoose.Schema(
             required: true,
             type: String,
             lowercase: true,
-            trim:true
+            trim: true,
         },
         is_active: {
             required: false,
@@ -46,7 +46,7 @@ const dataSchema = new mongoose.Schema(
             required: false,
             type: String,
             lowercase: true,
-            trim:true
+            trim: true,
         },
         image_url: {
             required: false,
@@ -67,7 +67,7 @@ const dataSchema = new mongoose.Schema(
     },
     {
         timestamps: true,
-        versionKey: false
+        versionKey: false,
     }
 )
 
