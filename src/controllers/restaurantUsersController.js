@@ -6,7 +6,6 @@ const restaurantUsersController = {
     async get(req, res, next) {
         const validationSchema = Joi.object({
             username: Joi.string(),
-            password: Joi.string(),
             is_admin: Joi.bool(),
             role: Joi.string(),
             created_by: Joi.string(),
@@ -19,7 +18,7 @@ const restaurantUsersController = {
         }
 
         try {
-            const data = await RestaurantUsers.find()
+            const data = await RestaurantUsers.find(req.query)
             res.status(200).json({ status: true, data: data })
         } catch (error) {
             return next(error)

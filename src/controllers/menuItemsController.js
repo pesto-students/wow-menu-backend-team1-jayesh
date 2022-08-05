@@ -18,7 +18,7 @@ const menuItemsController = {
         }
 
         try {
-            const data = await MenuItems.find()
+            const data = await MenuItems.find(req.query)
             let finalData = {}
             let key = '';
             for(let i = 0; i < data.length; i++) {

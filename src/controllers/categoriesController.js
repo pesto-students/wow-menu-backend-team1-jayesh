@@ -15,7 +15,7 @@ const categoriesController = {
         }
 
         try {
-            const data = await Categories.find()
+            const data = await Categories.find(req.query)
             res.status(200).json({ status: true, data: data })
         } catch (error) {
             return next(error)
