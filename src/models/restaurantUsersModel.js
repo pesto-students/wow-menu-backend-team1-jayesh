@@ -14,7 +14,7 @@ const dataSchema = new mongoose.Schema(
         is_admin: {
             required: false,
             type: Boolean,
-            default: false
+            default: false,
         },
         role: {
             required: true,
@@ -27,7 +27,7 @@ const dataSchema = new mongoose.Schema(
         restaurant_code: {
             required: true,
             type: String,
-        }
+        },
     },
     {
         timestamps: true,

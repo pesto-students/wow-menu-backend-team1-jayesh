@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import { Categories } from '../models'
+import { Categories, MenuItems } from '../models'
 
 const categoriesController = {
     async get(req, res, next) {
@@ -69,7 +69,7 @@ const categoriesController = {
             const validationSchema = Joi.object({
                 category: Joi.string(),
                 is_active: Joi.bool(),
-                created_by: Joi.string()
+                restaurant_code: Joi.string().required(),
             })
 
             const { error } = await validationSchema.validate(req.body)
@@ -78,6 +78,16 @@ const categoriesController = {
             }
 
             const options = { new: true }
+
+            req.body.created_by = 'admin'
+            if (req.body.is_active !== undefined) {
+                const categoryData = await Categories.findById(id)
+                if (categoryData.length !== 0) {
+                    await updateMenuItemsStatus(categoryData, req.body)
+                } else {
+                    next({ message: `Category with ${id} doesn't exists` })
+                }
+            }
 
             const result = await Categories.findByIdAndUpdate(
                 id,
@@ -105,7 +115,25 @@ const categoriesController = {
         } catch (error) {
             return next(error)
         }
-    }
+    },
+}
+
+const updateMenuItemsStatus = (categoryData, requestBody) => {
+    MenuItems.find(
+        { category: categoryData.category },
+        (err, menuItemsData) => {
+            menuItemsData.map((row) => {
+                MenuItems.findByIdAndUpdate(
+                    row._id,
+                    { is_active: requestBody.is_active },
+                    { new: true },
+                    (error, result) => {
+                        console.log(error)
+                    }
+                )
+            })
+        }
+    )
 }
 
 export default categoriesController

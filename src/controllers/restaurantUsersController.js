@@ -40,7 +40,7 @@ const restaurantUsersController = {
             password: Joi.string().required(),
             is_admin: Joi.bool(),
             role: Joi.string().required(),
-            restaurant_code: Joi.number().required()
+            restaurant_code: Joi.number().required(),
         })
 
         const { error } = await validationSchema.validate(req.body)
@@ -77,7 +77,7 @@ const restaurantUsersController = {
             const validationSchema = Joi.object({
                 password: Joi.string(),
                 is_admin: Joi.bool(),
-                role: req.body.role
+                role: req.body.role,
             })
 
             const { error } = await validationSchema.validate(req.body)
@@ -117,8 +117,7 @@ const restaurantUsersController = {
         } catch (error) {
             return next(error)
         }
-    }
-
+    },
 }
 
 export default restaurantUsersController

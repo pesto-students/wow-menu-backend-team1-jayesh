@@ -20,13 +20,12 @@ const menuItemsController = {
         try {
             const data = await MenuItems.find(req.query)
             let finalData = {}
-            let key = '';
-            for(let i = 0; i < data.length; i++) {
+            let key = ''
+            for (let i = 0; i < data.length; i++) {
                 key = data[i]['category']
-                if(key in finalData) {
+                if (key in finalData) {
                     finalData[key].push(data[i])
-                }
-                else {
+                } else {
                     finalData[key] = [data[i]]
                 }
             }
@@ -57,7 +56,7 @@ const menuItemsController = {
             is_veg: Joi.bool(),
             spicy: Joi.string(),
             image_url: Joi.string(),
-            restaurant_code: Joi.number().required()
+            restaurant_code: Joi.number().required(),
         })
 
         const { error } = await validationSchema.validate(req.body)
@@ -108,7 +107,7 @@ const menuItemsController = {
                 is_veg: Joi.bool(),
                 spicy: Joi.string(),
                 image_url: Joi.string(),
-                restaurant_code: Joi.string().required()
+                restaurant_code: Joi.string().required(),
             })
 
             const { error } = await validationSchema.validate(req.body)
@@ -118,9 +117,9 @@ const menuItemsController = {
 
             const options = { new: true }
 
-            req.body.created_by = 'admin';
+            req.body.created_by = 'admin'
 
-            (req.body.category !== undefined && await addCategories(req))
+            req.body.category !== undefined && (await addCategories(req))
 
             const result = await MenuItems.findByIdAndUpdate(
                 id,
@@ -148,11 +147,13 @@ const menuItemsController = {
         } catch (error) {
             return next(error)
         }
-    }
-};
+    },
+}
 
 const addCategories = async (req) => {
-    const categoriesData = await Categories.find({category: req.body.category})
+    const categoriesData = await Categories.find({
+        category: req.body.category,
+    })
     if (categoriesData.length === 0) {
         const data = new Categories({
             category: req.body.category,
@@ -161,6 +162,6 @@ const addCategories = async (req) => {
         })
         await data.save()
     }
-};
+}
 
 export default menuItemsController
