@@ -7,11 +7,6 @@ const dataSchema = new mongoose.Schema(
             type: String,
             unique: true,
         },
-        email_id: {
-            required: true,
-            type: String,
-            unique: true,
-        },
         password: {
             required: true,
             type: String,
