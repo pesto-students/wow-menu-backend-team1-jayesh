@@ -22,6 +22,7 @@ const dataSchema = new mongoose.Schema(
     },
     {
         timestamps: true,
+        versionKey: false,
     }
 )
 

@@ -95,11 +95,9 @@ const updateMenuItemsStatus = (categoryData, requestBody, res) => {
                     { new: true },
                     (error) => {
                         if (error) {
-                            return res
-                                .status(500)
-                                .json({
-                                    message: `unable to update menu items is_active status`,
-                                })
+                            return res.status(500).json({
+                                message: `unable to update menu items is_active status`,
+                            })
                         }
                     }
                 )

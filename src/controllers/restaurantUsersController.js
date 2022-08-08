@@ -1,5 +1,6 @@
 import { RestaurantUsers } from '../models'
-import bcrypt from 'bcrypt'
+import hashPasswordUtil from '../utils/hashPasswordUtil'
+import HashPasswordUtil from '../utils/hashPasswordUtil'
 
 const restaurantUsersController = {
     async get(req, res, next) {
@@ -21,11 +22,9 @@ const restaurantUsersController = {
     },
 
     async post(req, res, next) {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10)
-
         const data = new RestaurantUsers({
             username: req.body.username,
-            password: hashedPassword,
+            password: hashPasswordUtil(req.body.password),
             is_admin: req.body.is_admin,
             role: req.body.role,
             created_by: 'admin',
@@ -51,7 +50,7 @@ const restaurantUsersController = {
             const options = { new: true }
 
             if (typeof req.body.password !== 'undefined') {
-                req.body.password = await bcrypt.hash(req.body.password, 10)
+                req.body.password = await HashPasswordUtil(req.body.password)
             }
 
             const result = await RestaurantUsers.findByIdAndUpdate(

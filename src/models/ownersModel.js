@@ -2,35 +2,31 @@ import mongoose from 'mongoose'
 
 const dataSchema = new mongoose.Schema(
     {
-        username: {
+        firstname: {
             required: true,
             type: String,
-            unique: true,
+        },
+        lastname: {
+            required: true,
+            type: String,
         },
         password: {
             required: true,
             type: String,
         },
-        is_admin: {
+        email_id: {
+            required: true,
+            type: String,
+            unique: true,
+        },
+        is_verified: {
             required: false,
             type: Boolean,
             default: false,
         },
-        role: {
-            required: true,
-            type: String,
-        },
-        created_by: {
-            required: true,
-            type: String,
-        },
         restaurant_code: {
-            required: true,
+            required: false,
             type: String,
-        },
-        is_active: {
-            type: Boolean,
-            default: true,
         },
     },
     {
@@ -39,4 +35,4 @@ const dataSchema = new mongoose.Schema(
     }
 )
 
-export default mongoose.model('RestaurantUsers', dataSchema, 'RestaurantUsers')
+export default mongoose.model('Owners', dataSchema, 'Owners')
