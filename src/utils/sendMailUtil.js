@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 import { EMAIL_ID, PASSWORD } from '../../config'
 
-const sendMail = async (to, subject, text, htmlBody) => {
+const sendMailUtil = async (to, subject, text, htmlBody) => {
     const mailData = {
         from: EMAIL_ID,
         to: to,
@@ -24,4 +24,4 @@ const transporter = nodemailer.createTransport({
     secure: true,
 })
 
-export default sendMail
+export default sendMailUtil

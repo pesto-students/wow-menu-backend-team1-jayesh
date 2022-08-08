@@ -56,6 +56,7 @@ const menuItemsController = {
             req.body.created_by = 'admin'
 
             req.body.category !== undefined && (await addCategories(req))
+            req.body.updated_at = Date.now()
 
             const result = await MenuItems.findByIdAndUpdate(id, req.body, {
                 new: true,

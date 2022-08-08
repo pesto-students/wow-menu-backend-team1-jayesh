@@ -15,7 +15,7 @@ function getDataSchema(req, res) {
         case 'GET': {
             return Joi.object({
                 restaurant_code: Joi.string().required(),
-                _id: Joi.string(),
+                id: Joi.string(),
                 category: Joi.string(),
                 is_available: Joi.bool(),
                 is_active: Joi.bool(),
@@ -50,7 +50,7 @@ function getDataSchema(req, res) {
                 is_veg: Joi.bool(),
                 spicy: Joi.string(),
                 image_url: Joi.string(),
-                restaurant_code: Joi.string().required(),
+                restaurant_code: Joi.string(),
             })
         }
         default: {

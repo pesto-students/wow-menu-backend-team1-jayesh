@@ -1,6 +1,6 @@
 import { Owners } from '../models'
 import hashPasswordUtil from '../utils/hashPasswordUtil'
-import sendMail from '../utils/sendMail'
+import sendMailUtil from '../utils/sendMailUtil'
 import { APP_URL } from '../../config'
 
 const ownersController = {
@@ -32,11 +32,11 @@ const ownersController = {
 
         try {
             const result = await data.save()
-            const queryParams = `id=${result['_id']}&hashed_string=${result['password']}`
+            const queryParams = `id=${result['id']}&hashed_string=${result['password']}`
             const htmlBody = `<b>Greetings from Wow Menu<b> 
                 <br> Click on this link to verify your password <br><br>
                 <a>${APP_URL}/api//verify/mail?${queryParams}</a>`
-            await sendMail(
+            await sendMailUtil(
                 req.body.email_id,
                 'Wow Menu Verification Mail',
                 'Please verify your email id',
@@ -59,6 +59,8 @@ const ownersController = {
             if (typeof req.body.password !== 'undefined') {
                 req.body.password = await hashPasswordUtil(req.body.password)
             }
+
+            req.body.updated_at = Date.now()
 
             const result = await Owners.findByIdAndUpdate(
                 req.params.id,

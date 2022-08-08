@@ -46,6 +46,8 @@ const categoriesController = {
             const options = { new: true }
 
             req.body.created_by = 'admin'
+            req.body.updated_at = Date.now()
+
             if (req.body.is_active !== undefined) {
                 const categoryData = await Categories.findById(id)
                 if (categoryData.length !== 0) {
@@ -90,7 +92,7 @@ const updateMenuItemsStatus = (categoryData, requestBody, res) => {
         (err, menuItemsData) => {
             menuItemsData.map((row) => {
                 MenuItems.findByIdAndUpdate(
-                    row._id,
+                    row.id,
                     { is_active: requestBody.is_active },
                     { new: true },
                     (error) => {

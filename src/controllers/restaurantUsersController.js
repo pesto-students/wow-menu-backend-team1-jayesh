@@ -53,6 +53,8 @@ const restaurantUsersController = {
                 req.body.password = await HashPasswordUtil(req.body.password)
             }
 
+            req.body.updated_at = Date.now()
+
             const result = await RestaurantUsers.findByIdAndUpdate(
                 id,
                 req.body,

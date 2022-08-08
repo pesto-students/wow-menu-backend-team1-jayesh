@@ -28,9 +28,17 @@ const dataSchema = new mongoose.Schema(
             required: false,
             type: String,
         },
+        created_at: {
+            type: Date,
+            default: () => Date.now()
+        },
+        updated_at: {
+            type: Date,
+            default: () => Date.now()
+        }
     },
     {
-        timestamps: true,
+        timestamps: false,
         versionKey: false,
     }
 )

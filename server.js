@@ -9,6 +9,12 @@ mongoose.connect(DATABASE_URL)
 const db = mongoose.connection
 db.on('error', () => console.error('database connection failed'))
 db.once('open', () => console.log('database connection established'))
+mongoose.set("toJSON", {
+    virtuals: true,
+    transform: (doc, converted) => {
+        delete converted._id;
+    },
+});
 
 app.use(express.json())
 app.use('/api', routes)
