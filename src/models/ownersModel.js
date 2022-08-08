@@ -2,21 +2,30 @@ import mongoose from 'mongoose'
 
 const dataSchema = new mongoose.Schema(
     {
-        category: {
+        firstname: {
             required: true,
             type: String,
         },
-        is_active: {
+        lastname: {
+            required: true,
+            type: String,
+        },
+        password: {
+            required: true,
+            type: String,
+        },
+        email_id: {
+            required: true,
+            type: String,
+            unique: true,
+        },
+        is_verified: {
             required: false,
             type: Boolean,
-            default: true,
-        },
-        created_by: {
-            required: true,
-            type: String,
+            default: false,
         },
         restaurant_code: {
-            required: true,
+            required: false,
             type: String,
         },
         created_at: {
@@ -34,4 +43,4 @@ const dataSchema = new mongoose.Schema(
     }
 )
 
-export default mongoose.model('Categories', dataSchema, 'Categories')
+export default mongoose.model('Owners', dataSchema, 'Owners')

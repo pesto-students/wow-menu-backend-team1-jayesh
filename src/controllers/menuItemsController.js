@@ -1,35 +1,17 @@
-import Joi from 'joi'
 import { MenuItems, Categories } from '../models'
 
 const menuItemsController = {
     async get(req, res, next) {
-        const validationSchema = Joi.object({
-            restaurant_code: Joi.string().required(),
-            category: Joi.string(),
-            is_available: Joi.bool(),
-            is_active: Joi.bool(),
-            is_veg: Joi.bool(),
-            spicy: Joi.string(),
-        })
-
-        const { error } = await validationSchema.validate(req.query)
-        if (error) {
-            return next(error)
-        }
-
         try {
-            const data = await MenuItems.find(req.query)
-            let finalData = {}
-            let key = ''
-            for (let i = 0; i < data.length; i++) {
-                key = data[i]['category']
-                if (key in finalData) {
-                    finalData[key].push(data[i])
-                } else {
-                    finalData[key] = [data[i]]
-                }
+            let data
+            if (req.query.limit) {
+                const {page_no, limit} = req.query
+                data = await MenuItems.find(req.query).skip((page_no - 1) * limit).limit(limit)
             }
-            res.status(200).json({ status: true, data: finalData })
+            else {
+                data = await MenuItems.find(req.query)
+            }
+            res.status(200).json({ status: true, data: data })
         } catch (error) {
             return next(error)
         }
@@ -45,25 +27,6 @@ const menuItemsController = {
     },
 
     async post(req, res, next) {
-        const validationSchema = Joi.object({
-            name: Joi.string().required(),
-            description: Joi.string().required(),
-            price: Joi.number().required(),
-            discounted_price: Joi.number(),
-            category: Joi.string().required(),
-            is_available: Joi.bool(),
-            is_active: Joi.bool(),
-            is_veg: Joi.bool(),
-            spicy: Joi.string(),
-            image_url: Joi.string(),
-            restaurant_code: Joi.number().required(),
-        })
-
-        const { error } = await validationSchema.validate(req.body)
-        if (error) {
-            return next(error)
-        }
-
         await addCategories(req)
 
         const data = new MenuItems({
@@ -96,36 +59,15 @@ const menuItemsController = {
     async update(req, res, next) {
         try {
             const id = req.params.id
-            const validationSchema = Joi.object({
-                name: Joi.string(),
-                description: Joi.string(),
-                price: Joi.number(),
-                discounted_price: Joi.number(),
-                category: Joi.string(),
-                is_available: Joi.bool(),
-                is_active: Joi.bool(),
-                is_veg: Joi.bool(),
-                spicy: Joi.string(),
-                image_url: Joi.string(),
-                restaurant_code: Joi.string().required(),
-            })
-
-            const { error } = await validationSchema.validate(req.body)
-            if (error) {
-                return next(error)
-            }
-
-            const options = { new: true }
 
             req.body.created_by = 'admin'
 
             req.body.category !== undefined && (await addCategories(req))
+            req.body.updated_at = Date.now()
 
-            const result = await MenuItems.findByIdAndUpdate(
-                id,
-                req.body,
-                options
-            )
+            const result = await MenuItems.findByIdAndUpdate(id, req.body, {
+                new: true,
+            })
             res.status(200).json({
                 message: 'Menu item is updated successfully',
                 status: true,

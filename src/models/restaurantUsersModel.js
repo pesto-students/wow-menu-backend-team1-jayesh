@@ -28,9 +28,22 @@ const dataSchema = new mongoose.Schema(
             required: true,
             type: String,
         },
+        is_active: {
+            type: Boolean,
+            default: true,
+        },
+        created_at: {
+            type: Date,
+            default: () => Date.now()
+        },
+        updated_at: {
+            type: Date,
+            default: () => Date.now()
+        }
     },
     {
-        timestamps: true,
+        timestamps: false,
+        versionKey: false,
     }
 )
 

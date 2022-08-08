@@ -1,19 +1,7 @@
-import Joi from 'joi'
 import { Categories, MenuItems } from '../models'
 
 const categoriesController = {
     async get(req, res, next) {
-        const validationSchema = Joi.object({
-            restaurant_code: Joi.string().required(),
-            category: Joi.string(),
-            is_active: Joi.bool(),
-        })
-
-        const { error } = await validationSchema.validate(req.query)
-        if (error) {
-            return next(error)
-        }
-
         try {
             const data = await Categories.find(req.query)
             res.status(200).json({ status: true, data: data })
@@ -32,18 +20,6 @@ const categoriesController = {
     },
 
     async post(req, res, next) {
-        const validationSchema = Joi.object({
-            category: Joi.string().required(),
-            is_active: Joi.bool(),
-            created_by: Joi.string().required(),
-            restaurant_code: Joi.number().required(),
-        })
-
-        const { error } = await validationSchema.validate(req.body)
-        if (error) {
-            return next(error)
-        }
-
         const data = new Categories({
             category: req.body.category,
             is_active: req.body.is_active,
@@ -66,24 +42,16 @@ const categoriesController = {
     async update(req, res, next) {
         try {
             const id = req.params.id
-            const validationSchema = Joi.object({
-                category: Joi.string(),
-                is_active: Joi.bool(),
-                restaurant_code: Joi.string().required(),
-            })
-
-            const { error } = await validationSchema.validate(req.body)
-            if (error) {
-                return next(error)
-            }
 
             const options = { new: true }
 
             req.body.created_by = 'admin'
+            req.body.updated_at = Date.now()
+
             if (req.body.is_active !== undefined) {
                 const categoryData = await Categories.findById(id)
                 if (categoryData.length !== 0) {
-                    await updateMenuItemsStatus(categoryData, req.body)
+                    await updateMenuItemsStatus(categoryData, req.body, res)
                 } else {
                     next({ message: `Category with ${id} doesn't exists` })
                 }
@@ -118,17 +86,21 @@ const categoriesController = {
     },
 }
 
-const updateMenuItemsStatus = (categoryData, requestBody) => {
+const updateMenuItemsStatus = (categoryData, requestBody, res) => {
     MenuItems.find(
         { category: categoryData.category },
         (err, menuItemsData) => {
             menuItemsData.map((row) => {
                 MenuItems.findByIdAndUpdate(
-                    row._id,
+                    row.id,
                     { is_active: requestBody.is_active },
                     { new: true },
-                    (error, result) => {
-                        console.log(error)
+                    (error) => {
+                        if (error) {
+                            return res.status(500).json({
+                                message: `unable to update menu items is_active status`,
+                            })
+                        }
                     }
                 )
             })

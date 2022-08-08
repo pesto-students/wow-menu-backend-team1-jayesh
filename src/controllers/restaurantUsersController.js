@@ -1,22 +1,9 @@
-import Joi from 'joi'
 import { RestaurantUsers } from '../models'
-import bcrypt from 'bcrypt'
+import hashPasswordUtil from '../utils/hashPasswordUtil'
+import HashPasswordUtil from '../utils/hashPasswordUtil'
 
 const restaurantUsersController = {
     async get(req, res, next) {
-        const validationSchema = Joi.object({
-            username: Joi.string(),
-            is_admin: Joi.bool(),
-            role: Joi.string(),
-            created_by: Joi.string(),
-            restaurant_code: Joi.number().required(),
-        })
-
-        const { error } = await validationSchema.validate(req.query)
-        if (error) {
-            return next(error)
-        }
-
         try {
             const data = await RestaurantUsers.find(req.query)
             res.status(200).json({ status: true, data: data })
@@ -35,24 +22,9 @@ const restaurantUsersController = {
     },
 
     async post(req, res, next) {
-        const validationSchema = Joi.object({
-            username: Joi.string().required(),
-            password: Joi.string().required(),
-            is_admin: Joi.bool(),
-            role: Joi.string().required(),
-            restaurant_code: Joi.number().required(),
-        })
-
-        const { error } = await validationSchema.validate(req.body)
-        if (error) {
-            return next(error)
-        }
-
-        const hashedPassword = await bcrypt.hash(req.body.password, 10)
-
         const data = new RestaurantUsers({
             username: req.body.username,
-            password: hashedPassword,
+            password: hashPasswordUtil(req.body.password),
             is_admin: req.body.is_admin,
             role: req.body.role,
             created_by: 'admin',
@@ -74,22 +46,14 @@ const restaurantUsersController = {
     async update(req, res, next) {
         try {
             const id = req.params.id
-            const validationSchema = Joi.object({
-                password: Joi.string(),
-                is_admin: Joi.bool(),
-                role: req.body.role,
-            })
-
-            const { error } = await validationSchema.validate(req.body)
-            if (error) {
-                return next(error)
-            }
 
             const options = { new: true }
 
             if (typeof req.body.password !== 'undefined') {
-                req.body.password = await bcrypt.hash(req.body.password, 10)
+                req.body.password = await HashPasswordUtil(req.body.password)
             }
+
+            req.body.updated_at = Date.now()
 
             const result = await RestaurantUsers.findByIdAndUpdate(
                 id,
