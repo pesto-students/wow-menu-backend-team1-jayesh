@@ -3,7 +3,14 @@ import { MenuItems, Categories } from '../models'
 const menuItemsController = {
     async get(req, res, next) {
         try {
-            const data = await MenuItems.find(req.query)
+            let data
+            if (req.query.limit) {
+                const {page_no, limit} = req.query
+                data = await MenuItems.find(req.query).skip((page_no - 1) * limit).limit(limit)
+            }
+            else {
+                data = await MenuItems.find(req.query)
+            }
             res.status(200).json({ status: true, data: data })
         } catch (error) {
             return next(error)

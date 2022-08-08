@@ -21,7 +21,9 @@ function getDataSchema(req, res) {
                 is_active: Joi.bool(),
                 is_veg: Joi.bool(),
                 spicy: Joi.string(),
-            })
+                page_no: Joi.number().greater(0),
+                limit: Joi.number()
+            }).and('page_no', 'limit')
         }
         case 'POST': {
             return Joi.object({
