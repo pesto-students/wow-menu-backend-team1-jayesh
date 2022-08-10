@@ -11,6 +11,7 @@ import {
     categoriesValidation,
     restaurantUsersValidation,
     ownersValidation,
+    ordersValidation,
 } from '../middlewares/requestValidations'
 
 const router = express.Router()
@@ -56,15 +57,16 @@ router.post('/owners', ownersValidation, ownersController.post)
 router.patch('/owners/:id', ownersValidation, ownersController.update)
 router.delete('/owners/:id', ownersController.delete)
 
-router.post('/order', ordersController.postOrder)
-router.patch('/add-to-order/:id', ordersController.addToOrder)
-router.patch('/order/:id', ordersController.updateOrder)
+router.get('/orders', ordersValidation, ordersController.getOrders)
+router.get('/orders/:id', ordersController.getOrderById)
+router.post('/orders', ordersValidation, ordersController.postOrder)
+router.patch('/orders/:id/add', ordersValidation, ordersController.addToOrder)
+router.patch('/orders/:id', ordersValidation, ordersController.updateOrder)
 router.patch(
-    '/order/:order_id/iteration/:iteration_id',
+    '/orders/:order_id/iteration/:iteration_id',
+    ordersValidation,
     ordersController.updateIteration
 )
-router.get('/order', ordersController.getOrders)
-router.get('/order/:id', ordersController.getOrderById)
-router.delete('/order/:id', ordersController.deleteOrder)
+router.delete('/orders/:id', ordersController.deleteOrder)
 
 export default router
