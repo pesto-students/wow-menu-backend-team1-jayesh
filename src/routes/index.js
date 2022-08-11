@@ -5,6 +5,7 @@ import {
     restaurantUsersController,
     ownersController,
     ordersController,
+    billsController,
 } from '../controllers'
 import {
     menuItemsValidation,
@@ -12,6 +13,7 @@ import {
     restaurantUsersValidation,
     ownersValidation,
     ordersValidation,
+    billsValidation,
 } from '../middlewares/requestValidations'
 
 const router = express.Router()
@@ -69,4 +71,9 @@ router.patch(
 )
 router.delete('/orders/:id', ordersController.deleteOrder)
 
+router.get('/bills', billsValidation, billsController.getBills)
+router.get('/bills/:id', billsController.getBillById)
+router.post('/bills', billsValidation, billsController.postBill)
+router.patch('/bills/:id', billsValidation, billsController.updateBill)
+router.delete('/bills/:id', billsController.deleteBill)
 export default router

@@ -1,12 +1,13 @@
-import { Order } from '../models'
+import { Orders } from '../models'
 
 const ordersController = {
     async getOrders(req, res) {
+        //need to check restaurant id when restaurant model is done
         try {
             let orders
             if (req.query.limit) {
                 const { page, limit } = req.query
-                orders = await Order.find(req.query)
+                orders = await Orders.find(req.query)
                     .populate({
                         path: 'iterations',
                         populate: {
@@ -20,7 +21,7 @@ const ordersController = {
                     .limit(limit)
                     .skip((page - 1) * limit)
             } else {
-                orders = await Order.find(req.query).populate({
+                orders = await Orders.find(req.query).populate({
                     path: 'iterations',
                     populate: {
                         path: 'items',
@@ -42,7 +43,7 @@ const ordersController = {
     async getOrderById(req, res) {
         try {
             const id = req.params.id
-            const order = await Order.findById(id).populate({
+            const order = await Orders.findById(id).populate({
                 path: 'iterations',
                 populate: {
                     path: 'items',
@@ -67,7 +68,7 @@ const ordersController = {
     },
     async postOrder(req, res) {
         try {
-            const newOrder = new Order({
+            const newOrder = new Orders({
                 iterations: [
                     {
                         items: req.body.items,
@@ -92,7 +93,7 @@ const ordersController = {
     },
     async addToOrder(req, res) {
         try {
-            const order = await Order.findById(req.params.id)
+            const order = await Orders.findById(req.params.id)
             if (!order) {
                 return res.status(404).json({
                     success: false,
@@ -118,7 +119,7 @@ const ordersController = {
     },
     async updateOrder(req, res) {
         try {
-            const order = await Order.findById(req.params.id)
+            const order = await Orders.findById(req.params.id)
             if (!order) {
                 return res.status(404).json({
                     success: false,
@@ -150,7 +151,7 @@ const ordersController = {
                 .json({ success: false, error: 'Missing data' })
         }
         try {
-            const order = await Order.findById(order_id)
+            const order = await Orders.findById(order_id)
             if (!order) {
                 return res
                     .status(400)
@@ -174,7 +175,7 @@ const ordersController = {
     async deleteOrder(req, res) {
         try {
             const id = req.params.id
-            const order = await Order.findByIdAndDelete(id)
+            const order = await Orders.findByIdAndDelete(id)
             res.status(200).json({
                 message: `Order deleted successfully`,
                 status: true,
