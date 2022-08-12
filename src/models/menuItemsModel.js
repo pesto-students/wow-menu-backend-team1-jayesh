@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 
 const dataSchema = new mongoose.Schema(
     {
@@ -23,9 +23,8 @@ const dataSchema = new mongoose.Schema(
         },
         category: {
             required: true,
-            type: String,
-            lowercase: true,
-            trim: true,
+            type: Schema.Types.ObjectId,
+            ref: 'Categories'
         },
         is_active: {
             required: false,
@@ -48,6 +47,10 @@ const dataSchema = new mongoose.Schema(
             trim: true,
         },
         image_url: {
+            required: false,
+            type: String,
+        },
+        model_url: {
             required: false,
             type: String,
         },

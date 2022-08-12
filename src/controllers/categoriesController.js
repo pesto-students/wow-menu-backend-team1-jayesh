@@ -23,7 +23,7 @@ const categoriesController = {
         const data = new Categories({
             category: req.body.category,
             is_active: req.body.is_active,
-            created_by: req.body.created_by,
+            created_by: 'admin',
             restaurant_code: req.body.restaurant_code,
         })
 
