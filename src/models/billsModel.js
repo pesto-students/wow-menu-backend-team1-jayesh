@@ -18,7 +18,7 @@ const billSchema = new Schema(
         total_quantity: {
             type: Number,
         },
-        sobtotal_amount: {
+        subtotal: {
             type: Number,
         },
         cgst: {
@@ -29,7 +29,7 @@ const billSchema = new Schema(
             type: Number,
             default: 0,
         },
-        total_amount: {
+        total: {
             type: Number,
         },
         discount_percentage: {

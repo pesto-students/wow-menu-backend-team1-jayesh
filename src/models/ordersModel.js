@@ -6,6 +6,9 @@ const orderSchema = new Schema(
         iterations: [
             {
                 items: [Object],
+                instruction: {
+                    type: String,
+                },
                 status: {
                     type: String,
                     default: 'Pending',

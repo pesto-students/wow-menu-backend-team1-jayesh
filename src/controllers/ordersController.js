@@ -13,7 +13,7 @@ const ordersController = {
                         populate: {
                             path: 'items',
                             populate: {
-                                path: 'item_id',
+                                path: 'item',
                                 model: 'MenuItem',
                             },
                         },
@@ -26,7 +26,7 @@ const ordersController = {
                     populate: {
                         path: 'items',
                         populate: {
-                            path: 'item_id',
+                            path: 'item',
                             model: 'MenuItem',
                         },
                     },
@@ -48,7 +48,7 @@ const ordersController = {
                 populate: {
                     path: 'items',
                     populate: {
-                        path: 'item_id',
+                        path: 'item',
                         model: 'MenuItem',
                     },
                 },
@@ -73,12 +73,24 @@ const ordersController = {
                     {
                         items: req.body.items,
                         accepted_by: req.body.accepted_by,
+                        instruction: req.body.instruction,
                     },
                 ],
                 table_no: req.body.table_no,
                 restaurant_id: req.body.restaurant_id,
             })
-            const savedOrder = await newOrder.save()
+            const savedOrder = await newOrder.save().then((odr) =>
+                odr.populate({
+                    path: 'iterations',
+                    populate: {
+                        path: 'items',
+                        populate: {
+                            path: 'item',
+                            model: 'MenuItem',
+                        },
+                    },
+                })
+            )
             return res.status(201).json({
                 message: 'Order saved successfully',
                 status: true,
@@ -104,7 +116,18 @@ const ordersController = {
                 items: req.body.items,
                 accepted_by: req.body.accepted_by,
             })
-            const savedOrder = await order.save()
+            const savedOrder = await order.save().then((odr) =>
+                odr.populate({
+                    path: 'iterations',
+                    populate: {
+                        path: 'items',
+                        populate: {
+                            path: 'item',
+                            model: 'MenuItem',
+                        },
+                    },
+                })
+            )
             return res.status(201).json({
                 message: 'Order Updated successfully',
                 status: true,

@@ -26,11 +26,12 @@ function getDataSchema(req, res) {
                 items: Joi.array()
                     .items(
                         Joi.object({
-                            item_id: Joi.string(),
+                            item: Joi.string(),
                             quantity: Joi.number(),
                         })
                     )
                     .required(),
+                instruction: Joi.string().allow(''),
                 table_no: Joi.number().required(),
                 restaurant_id: Joi.string().required(),
             })
@@ -39,10 +40,11 @@ function getDataSchema(req, res) {
             return Joi.object({
                 items: Joi.array().items(
                     Joi.object({
-                        item_id: Joi.string(),
+                        item: Joi.string(),
                         quantity: Joi.number(),
                     })
                 ),
+                instruction: Joi.string().allow(''),
                 status: Joi.string(),
                 table_no: Joi.number(),
                 restaurant_id: Joi.number(),
