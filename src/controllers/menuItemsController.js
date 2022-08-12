@@ -4,6 +4,13 @@ const menuItemsController = {
     async get(req, res, next) {
         try {
             let data
+            if (req.query.name !== undefined) {
+                const val = req.query.name
+                req.query.name = {
+                    '$regex': val,
+                    '$options': 'i'
+                }
+            }
             if (req.query.limit) {
                 const {page_no, limit} = req.query
                 data = await MenuItems.find(req.query).skip((page_no - 1) * limit).limit(limit)
@@ -12,6 +19,37 @@ const menuItemsController = {
                 data = await MenuItems.find(req.query)
             }
             res.status(200).json({ status: true, data: data })
+        } catch (error) {
+            return next(error)
+        }
+    },
+
+    async groupByCategories(req, res, next) {
+        try {
+            let limit = 5
+            if (req.query.limit !== undefined) {
+                limit = req.query.limit
+            }
+            const menuItemsData = await MenuItems.find()
+            let result = {}
+            for (let i = 0; i < menuItemsData.length; i++) {
+                const val = menuItemsData[i]
+                const category = val.category
+                if (result[category] === undefined) {
+                    result[category] = []
+                    result[category].push(val)
+                }
+                else {
+                    const categoryData = result[category]
+                    if (categoryData.length < limit) {
+                        result[val.category].push(val)
+                    }
+                }
+
+                if (i === (menuItemsData.length -1)) {
+                    res.status(200).json({ status: true, data: result })
+                }
+            }
         } catch (error) {
             return next(error)
         }

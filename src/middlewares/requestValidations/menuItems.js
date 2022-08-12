@@ -13,17 +13,26 @@ async function menuItemsValidation(req, res, next) {
 function getDataSchema(req, res) {
     switch (req.method) {
         case 'GET': {
-            return Joi.object({
-                restaurant_code: Joi.string().required(),
-                id: Joi.string(),
-                category: Joi.string(),
-                is_available: Joi.bool(),
-                is_active: Joi.bool(),
-                is_veg: Joi.bool(),
-                spicy: Joi.string(),
-                page_no: Joi.number().greater(0),
-                limit: Joi.number()
-            }).and('page_no', 'limit')
+            if (req.path === '/menu-items/group-by-category' || req.path === '/menu-items/group-by-category/') {
+                return Joi.object({
+                    restaurant_code: Joi.string().required(),
+                    limit: Joi.number().greater(0)
+                })
+            }
+            else {
+                return Joi.object({
+                    restaurant_code: Joi.string().required(),
+                    name: Joi.string(),
+                    id: Joi.string(),
+                    category: Joi.string(),
+                    is_available: Joi.bool(),
+                    is_active: Joi.bool(),
+                    is_veg: Joi.bool(),
+                    spicy: Joi.string(),
+                    page_no: Joi.number().greater(0),
+                    limit: Joi.number().greater(0)
+                }).and('page_no', 'limit')
+            }
         }
         case 'POST': {
             return Joi.object({

@@ -35,7 +35,7 @@ const ownersController = {
             const queryParams = `id=${result['id']}&hashed_string=${result['password']}`
             const htmlBody = `<b>Greetings from Wow Menu<b> 
                 <br> Click on this link to verify your password <br><br>
-                <a>${APP_URL}/api//verify/mail?${queryParams}</a>`
+                <a>${APP_URL}/api/verify/mail?${queryParams}</a>`
             await sendMailUtil(
                 req.body.email_id,
                 'Wow Menu Verification Mail',
@@ -111,6 +111,10 @@ const ownersController = {
             })
         }
     },
+
+    async authenticate(req, res) {
+        res.json({token: req.user})
+    }
 }
 
 export default ownersController
