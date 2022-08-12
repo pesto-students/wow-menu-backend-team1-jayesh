@@ -13,10 +13,10 @@ const menuItemsController = {
             }
             if (req.query.limit) {
                 const {page_no, limit} = req.query
-                data = await MenuItems.find(req.query).skip((page_no - 1) * limit).limit(limit)
+                data = await MenuItems.find(req.query).skip((page_no - 1) * limit).limit(limit).populate('category')
             }
             else {
-                data = await MenuItems.find(req.query)
+                data = await MenuItems.find(req.query).populate('category')
             }
             res.status(200).json({ status: true, data: data })
         } catch (error) {
@@ -30,19 +30,18 @@ const menuItemsController = {
             if (req.query.limit !== undefined) {
                 limit = req.query.limit
             }
-            const menuItemsData = await MenuItems.find()
+            const menuItemsData = await MenuItems.find().populate('category')
             let result = {}
             for (let i = 0; i < menuItemsData.length; i++) {
                 const val = menuItemsData[i]
-                const category = val.category
+                const category = val.category.name
                 if (result[category] === undefined) {
-                    result[category] = []
-                    result[category].push(val)
+                    result[category] = [val]
                 }
                 else {
                     const categoryData = result[category]
                     if (categoryData.length < limit) {
-                        result[val.category].push(val)
+                        result[category] = [...result[category], val]
                     }
                 }
 
@@ -65,7 +64,6 @@ const menuItemsController = {
     },
 
     async post(req, res, next) {
-        await addCategories(req)
 
         const data = new MenuItems({
             name: req.body.name,
@@ -99,8 +97,6 @@ const menuItemsController = {
             const id = req.params.id
 
             req.body.created_by = 'admin'
-
-            req.body.category !== undefined && (await addCategories(req))
             req.body.updated_at = Date.now()
 
             const result = await MenuItems.findByIdAndUpdate(id, req.body, {
@@ -128,20 +124,6 @@ const menuItemsController = {
             return next(error)
         }
     },
-}
-
-const addCategories = async (req) => {
-    const categoriesData = await Categories.find({
-        category: req.body.category,
-    })
-    if (categoriesData.length === 0) {
-        const data = new Categories({
-            category: req.body.category,
-            created_by: 'admin',
-            restaurant_code: req.body.restaurant_code,
-        })
-        await data.save()
-    }
 }
 
 export default menuItemsController
