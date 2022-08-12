@@ -22,6 +22,7 @@ function getDataSchema(req, res) {
             else {
                 return Joi.object({
                     restaurant_code: Joi.string().required(),
+                    name: Joi.string(),
                     id: Joi.string(),
                     category: Joi.string(),
                     is_available: Joi.bool(),
