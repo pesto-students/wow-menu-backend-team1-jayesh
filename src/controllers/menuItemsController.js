@@ -4,6 +4,13 @@ const menuItemsController = {
     async get(req, res, next) {
         try {
             let data
+            if (req.query.name !== undefined) {
+                const val = req.query.name
+                req.query.name = {
+                    '$regex': val,
+                    '$options': 'i'
+                }
+            }
             if (req.query.limit) {
                 const {page_no, limit} = req.query
                 data = await MenuItems.find(req.query).skip((page_no - 1) * limit).limit(limit)

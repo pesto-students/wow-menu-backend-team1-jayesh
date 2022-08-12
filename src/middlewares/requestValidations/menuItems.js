@@ -14,6 +14,7 @@ function getDataSchema(req, res) {
     switch (req.method) {
         case 'GET': {
             return Joi.object({
+                name: Joi.string(),
                 restaurant_code: Joi.string().required(),
                 id: Joi.string(),
                 category: Joi.string(),
