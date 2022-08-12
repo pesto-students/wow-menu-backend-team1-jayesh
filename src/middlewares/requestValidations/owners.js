@@ -29,12 +29,20 @@ function getDataSchema(req, res) {
             }
         }
         case 'POST': {
-            return Joi.object({
-                firstname: Joi.string().required(),
-                lastname: Joi.string().required(),
-                email_id: Joi.string().required(),
-                password: Joi.string().required(),
-            })
+            if (req.path === '/owner/login' || req.path === '/owner/login/') {
+                return Joi.object({
+                    email_id: Joi.string().required(),
+                    password: Joi.string().required(),
+                })
+            }
+            else {
+                return Joi.object({
+                    firstname: Joi.string().required(),
+                    lastname: Joi.string().required(),
+                    email_id: Joi.string().required(),
+                    password: Joi.string().required(),
+                })
+            }
         }
         case 'PATCH': {
             return Joi.object({
