@@ -24,7 +24,7 @@ const categoriesController = {
             name: req.body.name,
             is_active: req.body.is_active,
             created_by: 'admin',
-            restaurant_code: req.body.restaurant_code,
+            restaurant: req.body.restaurant,
         })
 
         try {

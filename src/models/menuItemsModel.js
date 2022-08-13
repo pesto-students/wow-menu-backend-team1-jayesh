@@ -62,7 +62,7 @@ const dataSchema = new mongoose.Schema(
             required: true,
             type: String,
         },
-        restaurant_code: {
+        restaurant: {
             required: true,
             type: String,
         },

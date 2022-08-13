@@ -15,13 +15,13 @@ function getDataSchema(req, res) {
         case 'GET': {
             if (req.path === '/menu-items/group-by-category' || req.path === '/menu-items/group-by-category/') {
                 return Joi.object({
-                    restaurant_code: Joi.string().required(),
+                    restaurant: Joi.string().required(),
                     limit: Joi.number().greater(0)
                 })
             }
             else {
                 return Joi.object({
-                    restaurant_code: Joi.string().required(),
+                    restaurant: Joi.string().required(),
                     name: Joi.string(),
                     id: Joi.string(),
                     category: Joi.string(),
@@ -46,7 +46,7 @@ function getDataSchema(req, res) {
                 is_veg: Joi.bool(),
                 spicy: Joi.string(),
                 image_url: Joi.string(),
-                restaurant_code: Joi.number().required(),
+                restaurant: Joi.number().required(),
             })
         }
         case 'PATCH': {
@@ -61,7 +61,7 @@ function getDataSchema(req, res) {
                 is_veg: Joi.bool(),
                 spicy: Joi.string(),
                 image_url: Joi.string(),
-                restaurant_code: Joi.string(),
+                restaurant: Joi.string(),
             })
         }
         default: {

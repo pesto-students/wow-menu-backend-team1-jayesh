@@ -77,7 +77,7 @@ const menuItemsController = {
             spicy: req.body.spicy,
             image_url: req.body.image_url,
             created_by: 'admin', //todo get the created_by through the token
-            restaurant_code: req.body.restaurant_code,
+            restaurant: req.body.restaurant,
         })
 
         try {
