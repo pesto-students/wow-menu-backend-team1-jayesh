@@ -1,4 +1,4 @@
-import { MenuItems, Categories } from '../models'
+import { MenuItems } from '../models'
 
 const menuItemsController = {
     async get(req, res, next) {

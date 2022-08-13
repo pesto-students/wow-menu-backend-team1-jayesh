@@ -28,11 +28,11 @@ const categoriesController = {
         })
 
         try {
-            await data.save()
+            const result = await data.save()
             res.status(201).json({
                 message: 'Category successfully added',
                 status: true,
-                data: req.body,
+                data: result,
             })
         } catch (error) {
             return next(error)
