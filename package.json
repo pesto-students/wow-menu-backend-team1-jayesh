@@ -11,7 +11,7 @@
     "format:write": "prettier --write .",
     "lint:check": "eslint .",
     "lint:fix": "eslint --fix .",
-    "prepare": "husky install"
+    "prepare": "./prepare.sh"
   },
   "repository": {
     "type": "git",
