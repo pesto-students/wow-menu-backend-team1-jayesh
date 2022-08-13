@@ -5,10 +5,7 @@ const dataSchema = new mongoose.Schema(
         name: {
             required: true,
             type: String,
-        },
-        category: {
-            required: true,
-            type: String,
+            unique: true
         },
         is_active: {
             required: false,

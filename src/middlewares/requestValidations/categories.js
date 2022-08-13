@@ -21,7 +21,7 @@ function getDataSchema(req, res) {
         }
         case 'POST': {
             return Joi.object({
-                category: Joi.string().required(),
+                name: Joi.string().required(),
                 is_active: Joi.bool(),
                 restaurant_code: Joi.number().required(),
             })
