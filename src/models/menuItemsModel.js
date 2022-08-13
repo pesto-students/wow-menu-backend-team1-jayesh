@@ -1,84 +1,84 @@
-import mongoose, { Schema } from 'mongoose'
+import mongoose, { Schema } from "mongoose";
 
 const dataSchema = new mongoose.Schema(
-    {
-        name: {
-            required: true,
-            type: String,
-            unique: true,
-            trim: true
-        },
-        description: {
-            required: false,
-            type: String,
-            trim: true,
-        },
-        price: {
-            required: true,
-            type: Number,
-        },
-        discounted_price: {
-            required: false,
-            type: Number,
-        },
-        category: {
-            required: true,
-            type: Schema.Types.ObjectId,
-            ref: 'Categories'
-        },
-        is_active: {
-            required: false,
-            type: Boolean,
-            default: true,
-        },
-        is_available: {
-            required: false,
-            type: Boolean,
-            default: true,
-        },
-        is_veg: {
-            required: true,
-            type: Boolean,
-        },
-        spicy: {
-            required: false,
-            type: String,
-            lowercase: true,
-            trim: true,
-        },
-        image_url: {
-            required: false,
-            type: String,
-        },
-        model_url: {
-            required: false,
-            type: String,
-        },
-        preparation_time: {
-            required: false,
-            type: Number,
-        },
-        created_by: {
-            required: true,
-            type: String,
-        },
-        restaurant: {
-            required: true,
-            type: String,
-        },
-        created_at: {
-            type: Date,
-            default: () => Date.now()
-        },
-        updated_at: {
-            type: Date,
-            default: () => Date.now()
-        }
+  {
+    name: {
+      required: true,
+      type: String,
+      unique: true,
+      trim: true,
     },
-    {
-        timestamps: false,
-        versionKey: false,
-    }
-)
+    description: {
+      required: false,
+      type: String,
+      trim: true,
+    },
+    price: {
+      required: true,
+      type: Number,
+    },
+    discounted_price: {
+      required: false,
+      type: Number,
+    },
+    category: {
+      required: true,
+      type: Schema.Types.ObjectId,
+      ref: "Categories",
+    },
+    is_active: {
+      required: false,
+      type: Boolean,
+      default: true,
+    },
+    is_available: {
+      required: false,
+      type: Boolean,
+      default: true,
+    },
+    is_veg: {
+      required: true,
+      type: Boolean,
+    },
+    spicy: {
+      required: false,
+      type: String,
+      lowercase: true,
+      trim: true,
+    },
+    image_url: {
+      required: false,
+      type: String,
+    },
+    model_url: {
+      required: false,
+      type: String,
+    },
+    preparation_time: {
+      required: false,
+      type: Number,
+    },
+    created_by: {
+      required: true,
+      type: String,
+    },
+    restaurant: {
+      required: true,
+      type: String,
+    },
+    created_at: {
+      type: Date,
+      default: () => Date.now(),
+    },
+    updated_at: {
+      type: Date,
+      default: () => Date.now(),
+    },
+  },
+  {
+    timestamps: false,
+    versionKey: false,
+  },
+);
 
-export default mongoose.model('MenuItem', dataSchema, 'MenuItems')
+export default mongoose.model("MenuItem", dataSchema, "MenuItems");
