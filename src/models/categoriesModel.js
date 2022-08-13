@@ -1,14 +1,11 @@
-import mongoose from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 
 const dataSchema = new mongoose.Schema(
     {
         name: {
             required: true,
             type: String,
-        },
-        category: {
-            required: true,
-            type: String,
+            unique: true
         },
         is_active: {
             required: false,
@@ -19,7 +16,7 @@ const dataSchema = new mongoose.Schema(
             required: true,
             type: String,
         },
-        restaurant_code: {
+        restaurant: {
             required: true,
             type: String,
         },

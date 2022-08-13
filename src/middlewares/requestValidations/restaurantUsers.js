@@ -18,7 +18,7 @@ function getDataSchema(req, res) {
                 is_admin: Joi.bool(),
                 role: Joi.string(),
                 created_by: Joi.string(),
-                restaurant_code: Joi.number().required(),
+                restaurant: Joi.number().required(),
             })
         }
         case 'POST': {
@@ -27,7 +27,7 @@ function getDataSchema(req, res) {
                 password: Joi.string().required(),
                 is_admin: Joi.bool(),
                 role: Joi.string().required(),
-                restaurant_code: Joi.number().required(),
+                restaurant: Joi.number().required(),
                 is_active: Joi.bool(),
             })
         }

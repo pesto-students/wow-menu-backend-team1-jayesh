@@ -14,23 +14,23 @@ function getDataSchema(req, res) {
     switch (req.method) {
         case 'GET': {
             return Joi.object({
-                restaurant_code: Joi.string().required(),
+                restaurant: Joi.string().required(),
                 category: Joi.string(),
                 is_active: Joi.bool(),
             })
         }
         case 'POST': {
             return Joi.object({
-                category: Joi.string().required(),
+                name: Joi.string().required(),
                 is_active: Joi.bool(),
-                restaurant_code: Joi.number().required(),
+                restaurant: Joi.number().required(),
             })
         }
         case 'PATCH': {
             return Joi.object({
                 category: Joi.string(),
                 is_active: Joi.bool(),
-                restaurant_code: Joi.string().required(),
+                restaurant: Joi.string().required(),
             })
         }
         default: {

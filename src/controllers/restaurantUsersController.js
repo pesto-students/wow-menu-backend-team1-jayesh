@@ -28,7 +28,7 @@ const restaurantUsersController = {
             is_admin: req.body.is_admin,
             role: req.body.role,
             created_by: 'admin',
-            restaurant_code: req.body.restaurant_code,
+            restaurant: req.body.restaurant,
         })
 
         try {

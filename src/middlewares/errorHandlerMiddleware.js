@@ -1,17 +1,9 @@
-import { ValidationError } from 'joi'
-
-const errorHandler = (err, req, res) => {
-    if (typeof err.message !== 'undefined') {
-        const statusCode = err instanceof ValidationError ? 422 : 500
-
-        let data = {
-            message: err.message,
-        }
-
-        return res.status(statusCode).json(data)
+const errorHandler = (err, req, res, next) => {
+    if (err.name === 'ValidationError') {
+        return res.status(400).json({message: err.message});
     }
-    else {
-        res()
+    else if (err.code === 11000) {
+        res.status(409).json({message: err.message})
     }
 
 }
