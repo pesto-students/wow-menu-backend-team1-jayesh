@@ -19,7 +19,7 @@ function getDataSchema(req, res) {
                     lastname: Joi.string(),
                     is_verified: Joi.bool(),
                     email_id: Joi.string(),
-                    restaurant: Joi.number(),
+                    restaurant: Joi.string(),
                 })
             } else {
                 return Joi.object({

@@ -9,7 +9,7 @@ const app = express()
 mongoose.connect(DATABASE_URL)
 const db = mongoose.connection
 db.on('error', () => console.error('database connection failed'))
-db.once('open', () => console.log('database connection established'))
+db.once('open', () => console.log('database connection established')) // eslint-disable-line
 mongoose.set('toJSON', {
     virtuals: true,
     transform: (doc, converted) => {
@@ -29,4 +29,4 @@ app.use((req, res) =>
 )
 
 const port = process.env.PORT || APP_PORT
-app.listen(port, () => console.log(`Listening on port ${port}`))
+app.listen(port, () => console.log(`Listening on port ${port}`)) // eslint-disable-line

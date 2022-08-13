@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose'
+import mongoose from 'mongoose'
 
 const dataSchema = new mongoose.Schema(
     {
@@ -14,11 +14,11 @@ const dataSchema = new mongoose.Schema(
         },
         created_by: {
             required: true,
-            type: String,
+            type: String, //todo change to object id
         },
         restaurant: {
             required: true,
-            type: String,
+            type: String, //todo change to object id
         },
         created_at: {
             type: Date,

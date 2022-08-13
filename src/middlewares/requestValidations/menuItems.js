@@ -46,7 +46,7 @@ function getDataSchema(req, res) {
                 is_veg: Joi.bool(),
                 spicy: Joi.string(),
                 image_url: Joi.string(),
-                restaurant: Joi.number().required(),
+                restaurant: Joi.string().required(),
             })
         }
         case 'PATCH': {

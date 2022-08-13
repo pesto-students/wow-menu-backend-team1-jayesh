@@ -9,6 +9,7 @@
         "sourceType": "module"
     },
     "rules": {
-        "no-undef": "error"
+        "no-undef": "error",
+        "no-console": ["error", { "allow": ["warn", "error"] }]
     }
 }
