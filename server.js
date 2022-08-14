@@ -4,10 +4,10 @@ import routes from "./src/routes";
 import mongoose from "mongoose";
 import passport from "passport";
 import ErrorHandlerMiddleware from "./src/middlewares/errorHandlerMiddleware";
-import cors from 'cors'
+import cors from "cors";
 const app = express();
 
-app.use(cors)
+app.use(cors());
 mongoose.connect(DATABASE_URL);
 const db = mongoose.connection;
 db.on("error", () => console.error("database connection failed"));
