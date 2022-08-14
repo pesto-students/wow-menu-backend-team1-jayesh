@@ -1,23 +1,20 @@
 import passport from "passport";
 import LocalStrategy from "passport-local";
-import { Owners } from "../../src/models";
+import { Users } from "../../src/models";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
-const localOpts = {
-  usernameField: "email_id",
-};
+import { SECRET_KEY } from "../index";
 
 const localStrategy = new LocalStrategy(
-  localOpts,
-  async (email, password, done) => {
+  {},
+  async (username, password, done) => {
     try {
-      const user = await Owners.find({ email_id: email });
+      const user = await Users.find({ username });
       if (user.length === 0) {
-        return done(null, false, { message: "Email id is not registered" });
+        return done(null, false, { message: "Username is not registered" });
       } else {
         if (await bcrypt.compare(password, user[0].password)) {
-          let token = jwt.sign(JSON.stringify(user[0]), "secret-key");
+          let token = jwt.sign(JSON.stringify(user[0]), SECRET_KEY);
           return done(null, token);
         } else {
           return done(null, false);
@@ -31,7 +28,7 @@ const localStrategy = new LocalStrategy(
 
 passport.use(localStrategy);
 
-export const authLocal = passport.authenticate("local", {
+export const authLocalUser = passport.authenticate("local", {
   session: false,
   failWithError: false,
 });

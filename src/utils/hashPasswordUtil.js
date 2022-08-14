@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 
-const hashedPassword = (password) => {
+const hashPassword = (password) => {
   return bcrypt.hash(password, 10);
 };
 
-export default hashedPassword;
+export default hashPassword;

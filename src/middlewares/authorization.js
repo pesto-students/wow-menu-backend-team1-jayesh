@@ -1,15 +1,16 @@
 import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
-import { Owners } from "../models";
+import { Users } from "../models";
 import passport from "passport";
+import { SECRET_KEY } from "../../config";
 
 const jwtOpts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: "secret-key",
+  secretOrKey: SECRET_KEY,
 };
 
 const jwtStrategy = new JWTStrategy(jwtOpts, async (payload, done) => {
   try {
-    const user = await Owners.findById(payload.id);
+    const user = await Users.findById(payload.id);
 
     if (!user) {
       return done(null, false);

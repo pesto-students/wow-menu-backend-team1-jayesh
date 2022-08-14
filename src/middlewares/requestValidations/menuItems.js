@@ -45,7 +45,7 @@ function getDataSchema(req, res) {
         category: Joi.string().required(),
         is_available: Joi.bool(),
         is_active: Joi.bool(),
-        is_veg: Joi.bool(),
+        is_veg: Joi.bool().required(),
         spicy: Joi.string(),
         image_url: Joi.string(),
         restaurant: Joi.string().required(),

@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-async function ownersValidation(req, res, next) {
+async function usersValidation(req, res, next) {
   const validationSchema = await getDataSchema(req, res);
   const userInput = req.method === "GET" ? req.query : req.body;
   const { error } = await validationSchema.validate(userInput);
@@ -13,7 +13,7 @@ async function ownersValidation(req, res, next) {
 function getDataSchema(req, res) {
   switch (req.method) {
     case "GET": {
-      if (req.path === "/owners" || req.path === "/owners/") {
+      if (req.path === "/users" || req.path === "/users/") {
         return Joi.object({
           firstname: Joi.string(),
           lastname: Joi.string(),
@@ -31,15 +31,24 @@ function getDataSchema(req, res) {
     case "POST": {
       if (req.path === "/owner/login" || req.path === "/owner/login/") {
         return Joi.object({
-          email_id: Joi.string().required(),
+          email_id: Joi.string().email().required(),
+          password: Joi.string().required(),
+        });
+      } else if (req.path === "/user/login" || req.path === "/user/login/") {
+        return Joi.object({
+          username: Joi.string().required(),
           password: Joi.string().required(),
         });
       } else {
         return Joi.object({
           firstname: Joi.string().required(),
           lastname: Joi.string().required(),
-          email_id: Joi.string().required(),
           password: Joi.string().required(),
+          is_admin: Joi.bool(),
+          role: Joi.string().required(),
+          email_id: Joi.string().email(),
+          username: Joi.string(),
+          restaurant: Joi.string().required(),
         });
       }
     }
@@ -56,4 +65,4 @@ function getDataSchema(req, res) {
   }
 }
 
-export default ownersValidation;
+export default usersValidation;

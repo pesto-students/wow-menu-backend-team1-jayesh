@@ -2,20 +2,21 @@ import express from "express";
 import {
   menuItemsController,
   categoriesController,
-  restaurantUsersController,
-  ownersController,
   ordersController,
   billsController,
+  usersController,
 } from "../controllers";
+
 import {
   menuItemsValidation,
   categoriesValidation,
-  restaurantUsersValidation,
-  ownersValidation,
   ordersValidation,
   billsValidation,
+  usersValidation,
 } from "../middlewares/requestValidations";
-import { authLocal } from "../../config/auth/passport";
+
+import { authLocalOwner } from "../../config/auth/ownerPassport";
+import { authLocalUser } from "../../config/auth/userPassport";
 import { authJwt } from "../middlewares/authorization";
 
 const router = express.Router();
@@ -45,35 +46,23 @@ router.patch(
 );
 router.delete("/categories/:id", categoriesController.delete);
 
-router.get(
-  "/restaurant-users",
-  restaurantUsersValidation,
-  restaurantUsersController.get,
-);
-router.get("/restaurant-users/:id", restaurantUsersController.getById);
-router.post(
-  "/restaurant-users",
-  restaurantUsersValidation,
-  restaurantUsersController.post,
-);
-router.patch(
-  "/restaurant-users/:id",
-  restaurantUsersValidation,
-  restaurantUsersController.update,
-);
-router.delete("/restaurant-users/:id", restaurantUsersController.delete);
-
-router.get("/owners", ownersValidation, authJwt, ownersController.get);
-router.get("/verify/mail", ownersValidation, ownersController.verifyEmail);
-router.get("/owners/:id", ownersController.getById);
-router.post("/owners", ownersValidation, ownersController.post);
-router.patch("/owners/:id", ownersValidation, ownersController.update);
-router.delete("/owners/:id", ownersController.delete);
+router.get("/users", usersValidation, authJwt, usersController.get);
+router.get("/verify/mail", usersValidation, usersController.verifyEmail);
+router.get("/users/:id", usersController.getById);
+router.post("/users/signup", usersValidation, usersController.post);
+router.patch("/users/:id", usersValidation, usersController.update);
+router.delete("/users/:id", usersController.delete);
 router.post(
   "/owner/login",
-  ownersValidation,
-  authLocal,
-  ownersController.authenticate,
+  usersValidation,
+  authLocalOwner,
+  usersController.authenticate,
+);
+router.post(
+  "/user/login",
+  usersValidation,
+  authLocalUser,
+  usersController.authenticate,
 );
 
 router.get("/orders", ordersValidation, ordersController.getOrders);
