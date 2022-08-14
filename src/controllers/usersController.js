@@ -1,12 +1,10 @@
-import { Owners } from "../models";
+import { Users } from "../models";
 import hashPasswordUtil from "../utils/hashPasswordUtil";
-import sendMailUtil from "../utils/sendMailUtil";
-import { APP_URL } from "../../config";
 
-const ownersController = {
+const usersController = {
   async get(req, res, next) {
     try {
-      const data = await Owners.find(req.query);
+      const data = await Users.find(req.query);
       res.status(200).json({ status: true, data: data });
     } catch (error) {
       return next(error);
@@ -15,7 +13,7 @@ const ownersController = {
 
   async getById(req, res, next) {
     try {
-      const data = await Owners.findById(req.params.id);
+      const data = await Users.findById(req.params.id);
       res.status(200).json({ status: true, data: data });
     } catch (error) {
       return next(error);
@@ -23,29 +21,36 @@ const ownersController = {
   },
 
   async post(req, res, next) {
-    const data = new Owners({
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
-      email_id: req.body.email_id,
-      password: await hashPasswordUtil(req.body.password),
+    const {
+      firstname,
+      lastname,
+      password,
+      is_admin,
+      role,
+      email_id,
+      username,
+      is_verified,
+      restaurant,
+    } = req.body;
+
+    const data = new Users({
+      firstname,
+      lastname,
+      password,
+      is_admin,
+      role,
+      email_id,
+      username,
+      is_verified,
+      restaurant,
     });
 
     try {
       const result = await data.save();
-      const queryParams = `id=${result["id"]}&hashed_string=${result["password"]}`;
-      const htmlBody = `<b>Greetings from Wow Menu<b> 
-                <br> Click on this link to verify your password <br><br>
-                <a>${APP_URL}/api/verify/mail?${queryParams}</a>`;
-      await sendMailUtil(
-        req.body.email_id,
-        "Wow Menu Verification Mail",
-        "Please verify your email id",
-        htmlBody,
-      );
       res.status(201).json({
-        message: "Owner successfully added",
+        message: "User successfully added",
         status: true,
-        data: req.body,
+        data: result,
       });
     } catch (error) {
       return next(error);
@@ -62,7 +67,7 @@ const ownersController = {
 
       req.body.updated_at = Date.now();
 
-      const result = await Owners.findByIdAndUpdate(
+      const result = await Users.findByIdAndUpdate(
         req.params.id,
         req.body,
         options,
@@ -80,7 +85,7 @@ const ownersController = {
   async delete(req, res, next) {
     try {
       const id = req.params.id;
-      const { firstname, lastname } = await Owners.findByIdAndDelete(id);
+      const { firstname, lastname } = await Users.findByIdAndDelete(id);
       res.status(200).json({
         message: `Owner ${firstname} ${lastname} is successfully deleted`,
         status: true,
@@ -92,9 +97,9 @@ const ownersController = {
 
   async verifyEmail(req, res) {
     try {
-      const data = await Owners.findById(req.query.id);
+      const data = await Users.findById(req.query.id);
       if (req.query.hashed_string === data.password) {
-        await Owners.findByIdAndUpdate(
+        await Users.findByIdAndUpdate(
           req.query.id,
           { is_verified: true },
           { new: true },
@@ -117,4 +122,4 @@ const ownersController = {
   },
 };
 
-export default ownersController;
+export default usersController;
