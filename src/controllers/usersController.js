@@ -4,7 +4,7 @@ import hashPasswordUtil from "../utils/hashPasswordUtil";
 const usersController = {
   async get(req, res, next) {
     try {
-      const data = await Users.find(req.query);
+      const data = await Users.find(req.query).select("-password");
       res.status(200).json({ status: true, data: data });
     } catch (error) {
       return next(error);
@@ -47,6 +47,7 @@ const usersController = {
 
     try {
       const result = await data.save();
+      result.password = undefined;
       res.status(201).json({
         message: "User successfully added",
         status: true,
@@ -72,8 +73,9 @@ const usersController = {
         req.body,
         options,
       );
+      result.password = undefined;
       res.status(200).json({
-        message: `Owner's data is successfully updated`,
+        message: `User data is successfully updated`,
         status: true,
         data: result,
       });
@@ -87,7 +89,7 @@ const usersController = {
       const id = req.params.id;
       const { firstname, lastname } = await Users.findByIdAndDelete(id);
       res.status(200).json({
-        message: `Owner ${firstname} ${lastname} is successfully deleted`,
+        message: `User ${firstname} ${lastname} is successfully deleted`,
         status: true,
       });
     } catch (error) {
@@ -118,7 +120,7 @@ const usersController = {
   },
 
   async authenticate(req, res) {
-    res.json({ token: req.user });
+    res.json({ data: req.user });
   },
 };
 

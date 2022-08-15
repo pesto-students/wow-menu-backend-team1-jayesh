@@ -10,7 +10,7 @@ async function usersValidation(req, res, next) {
   next();
 }
 
-function getDataSchema(req, res) {
+function getDataSchema(req) {
   switch (req.method) {
     case "GET": {
       if (req.path === "/users" || req.path === "/users/") {
@@ -20,6 +20,7 @@ function getDataSchema(req, res) {
           is_verified: Joi.bool(),
           email_id: Joi.string(),
           restaurant: Joi.string(),
+          username: Joi.string(),
         });
       } else {
         return Joi.object({
@@ -29,12 +30,12 @@ function getDataSchema(req, res) {
       }
     }
     case "POST": {
-      if (req.path === "/owner/login" || req.path === "/owner/login/") {
+      if (req.path === "/login/owner" || req.path === "/login/owner") {
         return Joi.object({
           email_id: Joi.string().email().required(),
           password: Joi.string().required(),
         });
-      } else if (req.path === "/user/login" || req.path === "/user/login/") {
+      } else if (req.path === "/login/user" || req.path === "/login/user") {
         return Joi.object({
           username: Joi.string().required(),
           password: Joi.string().required(),
@@ -53,14 +54,21 @@ function getDataSchema(req, res) {
       }
     }
     case "PATCH": {
-      return Joi.object({
-        firstname: Joi.string(),
-        lastname: Joi.string(),
-        password: Joi.string(),
-      });
-    }
-    default: {
-      res.status(400).json({ message: "Invalid request method" });
+      if (req.path.includes("owner")) {
+        return Joi.object({
+          firstname: Joi.string(),
+          lastname: Joi.string(),
+          password: Joi.string(),
+        });
+      } else if (req.path.includes("user")) {
+        return Joi.object({
+          firstname: Joi.string(),
+          lastname: Joi.string(),
+          password: Joi.string(),
+          role: Joi.string(),
+          is_admin: Joi.string(),
+        });
+      }
     }
   }
 }
