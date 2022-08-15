@@ -39,6 +39,10 @@ const billSchema = new Schema(
     payment_mode: {
       type: String,
     },
+    razorpay: {
+      type: Schema.Types.ObjectId,
+      ref: "Transaction",
+    },
     order_id: {
       type: Schema.Types.ObjectId,
       ref: "Order",

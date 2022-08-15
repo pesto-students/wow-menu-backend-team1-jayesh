@@ -5,6 +5,7 @@ import {
   ordersController,
   billsController,
   usersController,
+  razorpayController,
 } from "../controllers";
 
 import {
@@ -82,5 +83,8 @@ router.get("/bills/:id", billsController.getBillById);
 router.post("/bills", billsValidation, billsController.postBill);
 router.patch("/bills/:id", billsValidation, billsController.updateBill);
 router.delete("/bills/:id", billsController.deleteBill);
+
+router.get("/razorpay/:id", razorpayController.getPaymentDetail);
+router.post("/razorpay/verify", razorpayController.verify);
 
 export default router;
