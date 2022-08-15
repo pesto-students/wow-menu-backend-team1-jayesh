@@ -1,4 +1,4 @@
-import Razorpay from "Razorpay";
+import Razorpay from "razorpay";
 import { Bills, Transaction } from "../models";
 // import crypto from "crypto";
 
