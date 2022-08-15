@@ -3,3 +3,4 @@ export { default as categoriesController } from "./categoriesController";
 export { default as usersController } from "./usersController";
 export { default as ordersController } from "./ordersController";
 export { default as billsController } from "./billsController";
+export { default as razorpayController } from "./razorpayController";
