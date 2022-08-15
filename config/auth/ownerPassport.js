@@ -14,15 +14,16 @@ const localStrategy = new LocalStrategy(
   async (email_id, password, done) => {
     try {
       const user = await Users.find({ email_id });
-
       if (user.length === 0) {
         return done(null, false, { message: "Email id is not registered" });
       } else if (
         (await bcrypt.compare(password, user[0].password)) &&
         user[0].is_verified
       ) {
-        let token = jwt.sign(JSON.stringify(user[0]), SECRET_KEY);
-        return done(null, token);
+        const payload = user[0];
+        payload["password"] = undefined;
+        let token = jwt.sign(JSON.stringify(payload), SECRET_KEY);
+        return done(null, { user_details: payload, token });
       } else {
         return done(null, false);
       }

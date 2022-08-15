@@ -49,18 +49,20 @@ router.delete("/categories/:id", categoriesController.delete);
 
 router.get("/users", usersValidation, authJwt, usersController.get);
 router.get("/verify/mail", usersValidation, usersController.verifyEmail);
-router.get("/users/:id", usersController.getById);
-router.post("/users/signup", usersValidation, usersController.post);
-router.patch("/users/:id", usersValidation, usersController.update);
-router.delete("/users/:id", usersController.delete);
+router.get("/user/:id", usersController.getById);
+router.patch("/user/:id", usersValidation, usersController.update);
+router.patch("/owner/:id", usersValidation, usersController.update);
+router.delete("/user/:id", usersController.delete);
+
+router.post("/signup", usersValidation, usersController.post);
 router.post(
-  "/owner/login",
+  "/login/owner",
   usersValidation,
   authLocalOwner,
   usersController.authenticate,
 );
 router.post(
-  "/user/login",
+  "/login/user",
   usersValidation,
   authLocalUser,
   usersController.authenticate,

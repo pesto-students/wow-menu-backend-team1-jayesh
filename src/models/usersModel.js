@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import sendMailUtil from "../utils/sendMailUtil";
 import { APP_URL } from "../../config";
 import hashPassword from "../utils/hashPasswordUtil";
+import { Users } from "./index";
 
 const dataSchema = new mongoose.Schema(
   {
@@ -69,6 +70,12 @@ dataSchema.pre("save", async function (next) {
     if (this.role.trim().toLowerCase() === "owner" && !this.email_id) {
       throw new Error(`Email id is required if your role is ${this.role}`);
     }
+    if (
+      this.role.trim().toLowerCase() === "owner" &&
+      !(await isOwnerUniqueForRestaurant(this.restaurant))
+    ) {
+      throw new Error(`Multiple owners can't be added for a restaurant`);
+    }
     if (this.role.trim().toLowerCase() !== "owner" && !this.username) {
       throw new Error(`Username is required if your role is ${this.role}`);
     }
@@ -78,6 +85,14 @@ dataSchema.pre("save", async function (next) {
     throw new Error(error);
   }
 });
+
+async function isOwnerUniqueForRestaurant(restaurantId) {
+  const data = await Users.find({
+    role: "owner",
+    restaurant: restaurantId,
+  });
+  return data.length === 0;
+}
 
 dataSchema.post("save", async function (doc) {
   if (doc.email_id) {
