@@ -12,9 +12,9 @@ const menuItemsController = {
         };
       }
       if (req.query.limit) {
-        const { page_no, limit } = req.query;
+        const { pageNo, limit } = req.query;
         data = await MenuItems.find(req.query)
-          .skip((page_no - 1) * limit)
+          .skip((pageNo - 1) * limit)
           .limit(limit)
           .populate("category");
       } else {
@@ -69,14 +69,14 @@ const menuItemsController = {
       name: req.body.name,
       description: req.body.description,
       price: req.body.price,
-      discounted_price: req.body.discounted_price,
+      discountedPrice: req.body.discountedPrice,
       category: req.body.category,
-      is_available: req.body.is_available,
-      is_active: req.body.is_active,
-      is_veg: req.body.is_veg,
+      isAvailable: req.body.isAvailable,
+      isActive: req.body.isActive,
+      isVeg: req.body.isVeg,
       spicy: req.body.spicy,
-      image_url: req.body.image_url,
-      created_by: "admin", //todo get the created_by through the token
+      imageUrl: req.body.imageUrl,
+      createdBy: "admin", //todo get the createdBy through the token
       restaurant: req.body.restaurant,
     });
 
@@ -96,8 +96,8 @@ const menuItemsController = {
     try {
       const id = req.params.id;
 
-      req.body.created_by = "admin";
-      req.body.updated_at = Date.now();
+      req.body.createdBy = "admin";
+      req.body.updatedAt = Date.now();
 
       const result = await MenuItems.findByIdAndUpdate(id, req.body, {
         new: true,

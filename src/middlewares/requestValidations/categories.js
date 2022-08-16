@@ -16,20 +16,20 @@ function getDataSchema(req, res) {
       return Joi.object({
         restaurant: Joi.string().required(),
         category: Joi.string(),
-        is_active: Joi.bool(),
+        isActive: Joi.bool(),
       });
     }
     case "POST": {
       return Joi.object({
         name: Joi.string().required(),
-        is_active: Joi.bool(),
+        isActive: Joi.bool(),
         restaurant: Joi.string().required(),
       });
     }
     case "PATCH": {
       return Joi.object({
         category: Joi.string(),
-        is_active: Joi.bool(),
+        isActive: Joi.bool(),
         restaurant: Joi.string().required(),
       });
     }

@@ -18,7 +18,7 @@ const dataSchema = new mongoose.Schema(
       required: true,
       type: String,
     },
-    is_admin: {
+    isAdmin: {
       default: false,
       type: Boolean,
     },
@@ -26,7 +26,7 @@ const dataSchema = new mongoose.Schema(
       required: true,
       type: String,
     },
-    email_id: {
+    emailId: {
       type: String,
       unique: true,
       trim: true,
@@ -40,18 +40,18 @@ const dataSchema = new mongoose.Schema(
       sparse: true,
       index: true,
     },
-    is_verified: {
+    isVerified: {
       type: Boolean,
       default: false,
     },
     restaurant: {
       type: String,
     },
-    created_at: {
+    createdAt: {
       type: Date,
       default: () => Date.now(),
     },
-    updated_at: {
+    updatedAt: {
       type: Date,
       default: () => Date.now(),
     },
@@ -65,9 +65,9 @@ const dataSchema = new mongoose.Schema(
 dataSchema.pre("save", async function (next) {
   try {
     if (this.role.trim().toLowerCase() === "owner") {
-      this.is_admin = true;
+      this.isAdmin = true;
     }
-    if (this.role.trim().toLowerCase() === "owner" && !this.email_id) {
+    if (this.role.trim().toLowerCase() === "owner" && !this.emailId) {
       throw new Error(`Email id is required if your role is ${this.role}`);
     }
     if (
@@ -95,13 +95,13 @@ async function isOwnerUniqueForRestaurant(restaurantId) {
 }
 
 dataSchema.post("save", async function (doc) {
-  if (doc.email_id) {
-    const queryParams = `id=${doc["_id"]}&hashed_string=${doc["password"]}`;
+  if (doc.emailId) {
+    const queryParams = `id=${doc["_id"]}&hashedString=${doc["password"]}`;
     const htmlBody = `<b>Greetings from Wow Menu<b>
                 <br> Click on this link to verify your password <br><br>
                 <link>${APP_URL}/api/verify/mail?${queryParams}</link>`;
     await sendMailUtil(
-      doc.email_id,
+      doc.emailId,
       "Wow Menu Verification Mail",
       "Please verify your email id",
       htmlBody,

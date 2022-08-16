@@ -17,7 +17,7 @@ const dataSchema = new mongoose.Schema(
       required: true,
       type: Number,
     },
-    discounted_price: {
+    discountedPrice: {
       required: false,
       type: Number,
     },
@@ -26,17 +26,17 @@ const dataSchema = new mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: "Categories",
     },
-    is_active: {
+    isActive: {
       required: false,
       type: Boolean,
       default: true,
     },
-    is_available: {
+    isAvailable: {
       required: false,
       type: Boolean,
       default: true,
     },
-    is_veg: {
+    isVeg: {
       required: true,
       type: Boolean,
     },
@@ -46,19 +46,19 @@ const dataSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    image_url: {
+    imageUrl: {
       required: false,
       type: String,
     },
-    model_url: {
+    modelUrl: {
       required: false,
       type: String,
     },
-    preparation_time: {
+    preparationTime: {
       required: false,
       type: Number,
     },
-    created_by: {
+    createdBy: {
       required: true,
       type: String,
     },
@@ -66,11 +66,11 @@ const dataSchema = new mongoose.Schema(
       required: true,
       type: String,
     },
-    created_at: {
+    createdAt: {
       type: Date,
       default: () => Date.now(),
     },
-    updated_at: {
+    updatedAt: {
       type: Date,
       default: () => Date.now(),
     },

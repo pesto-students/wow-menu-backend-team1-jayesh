@@ -22,8 +22,8 @@ const categoriesController = {
   async post(req, res, next) {
     const data = new Categories({
       name: req.body.name,
-      is_active: req.body.is_active,
-      created_by: "admin",
+      isActive: req.body.isActive,
+      createdBy: "admin",
       restaurant: req.body.restaurant,
     });
 
@@ -45,10 +45,10 @@ const categoriesController = {
 
       const options = { new: true };
 
-      req.body.created_by = "admin";
-      req.body.updated_at = Date.now();
+      req.body.createdBy = "admin";
+      req.body.updatedAt = Date.now();
 
-      if (req.body.is_active !== undefined) {
+      if (req.body.isActive !== undefined) {
         const categoryData = await Categories.findById(id);
         if (categoryData.length !== 0) {
           await updateMenuItemsStatus(categoryData, req.body, res);
@@ -87,12 +87,12 @@ const updateMenuItemsStatus = (categoryData, requestBody, res) => {
     menuItemsData.map((row) => {
       MenuItems.findByIdAndUpdate(
         row.id,
-        { is_active: requestBody.is_active },
+        { isActive: requestBody.isActive },
         { new: true },
         (error) => {
           if (error) {
             return res.status(500).json({
-              message: `unable to update menu items is_active status`,
+              message: `unable to update menu items isActive status`,
             });
           }
         },

@@ -27,13 +27,13 @@ function getDataSchema(req, res) {
           name: Joi.string(),
           id: Joi.string(),
           category: Joi.string(),
-          is_available: Joi.bool(),
-          is_active: Joi.bool(),
-          is_veg: Joi.bool(),
+          isAvailable: Joi.bool(),
+          isActive: Joi.bool(),
+          isVeg: Joi.bool(),
           spicy: Joi.string(),
-          page_no: Joi.number().greater(0),
+          pageNo: Joi.number().greater(0),
           limit: Joi.number().greater(0),
-        }).and("page_no", "limit");
+        }).and("pageNo", "limit");
       }
     }
     case "POST": {
@@ -41,13 +41,13 @@ function getDataSchema(req, res) {
         name: Joi.string().required(),
         description: Joi.string().required(),
         price: Joi.number().required(),
-        discounted_price: Joi.number(),
+        discountedPrice: Joi.number(),
         category: Joi.string().required(),
-        is_available: Joi.bool(),
-        is_active: Joi.bool(),
-        is_veg: Joi.bool().required(),
+        isAvailable: Joi.bool(),
+        isActive: Joi.bool(),
+        isVeg: Joi.bool().required(),
         spicy: Joi.string(),
-        image_url: Joi.string(),
+        imageUrl: Joi.string(),
         restaurant: Joi.string().required(),
       });
     }
@@ -56,13 +56,13 @@ function getDataSchema(req, res) {
         name: Joi.string(),
         description: Joi.string(),
         price: Joi.number(),
-        discounted_price: Joi.number(),
+        discountedPrice: Joi.number(),
         category: Joi.string(),
-        is_available: Joi.bool(),
-        is_active: Joi.bool(),
-        is_veg: Joi.bool(),
+        isAvailable: Joi.bool(),
+        isActive: Joi.bool(),
+        isVeg: Joi.bool(),
         spicy: Joi.string(),
-        image_url: Joi.string(),
+        imageUrl: Joi.string(),
         restaurant: Joi.string(),
       });
     }

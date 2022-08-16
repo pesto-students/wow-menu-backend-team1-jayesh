@@ -25,11 +25,11 @@ const usersController = {
       firstname,
       lastname,
       password,
-      is_admin,
+      isAdmin,
       role,
-      email_id,
+      emailId,
       username,
-      is_verified,
+      isVerified,
       restaurant,
     } = req.body;
 
@@ -37,11 +37,11 @@ const usersController = {
       firstname,
       lastname,
       password,
-      is_admin,
+      isAdmin,
       role,
-      email_id,
+      emailId,
       username,
-      is_verified,
+      isVerified,
       restaurant,
     });
 
@@ -66,7 +66,7 @@ const usersController = {
         req.body.password = await hashPasswordUtil(req.body.password);
       }
 
-      req.body.updated_at = Date.now();
+      req.body.updatedAt = Date.now();
 
       const result = await Users.findByIdAndUpdate(
         req.params.id,
@@ -100,10 +100,10 @@ const usersController = {
   async verifyEmail(req, res) {
     try {
       const data = await Users.findById(req.query.id);
-      if (req.query.hashed_string === data.password) {
+      if (req.query.hashedString === data.password) {
         await Users.findByIdAndUpdate(
           req.query.id,
-          { is_verified: true },
+          { isVerified: true },
           { new: true },
         );
         res.status(200).json({
