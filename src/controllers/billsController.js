@@ -107,7 +107,9 @@ const billsController = {
         }, 0),
       ).toFixed(2);
       const gst = parseFloat((5 * subtotal) / 100).toFixed(2); //after Restaurant Model need to bring details and get gst % from there
-      const totalAmt = parseFloat(subtotal + 2 * gst).toFixed(2);
+      const totalAmt = parseFloat(Number(2 * gst) + Number(subtotal)).toFixed(
+        2,
+      );
       const newBill = new Bills({
         order_id: id,
         table_no: order.table_no,

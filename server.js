@@ -1,4 +1,6 @@
 import express from "express";
+import { createServer } from "http";
+import { Server } from "socket.io";
 import { APP_PORT, DATABASE_URL } from "./config";
 import routes from "./src/routes";
 import mongoose from "mongoose";
@@ -8,6 +10,18 @@ import cors from "cors";
 const app = express();
 
 app.use(cors());
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+  },
+});
+
+io.on("connection", (socket) => {
+  // eslint-disable-next-line
+  console.log("User connected: ", socket.id);
+});
 mongoose.connect(DATABASE_URL);
 const db = mongoose.connection;
 db.on("error", () => console.error("database connection failed"));
@@ -31,4 +45,6 @@ app.use((req, res) =>
 );
 
 const port = process.env.PORT || APP_PORT;
-app.listen(port, () => console.log(`Listening on port ${port}`)); // eslint-disable-line
+httpServer.listen(port, () => console.log(`Listening on port ${port}`)); // eslint-disable-line
+
+app.locals.io = io;

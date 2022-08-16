@@ -179,8 +179,15 @@ const ordersController = {
           .json({ success: false, error: "Incorrect Order Id" });
       }
       var iteration = await order.iterations.id(iteration_id);
+      if (!iteration) {
+        return res
+          .status(400)
+          .json({ success: false, error: "Incorrect Iteration Id" });
+      }
       Object.assign(iteration, data);
       const savedOrder = await order.save();
+      const io = req.app.locals.io;
+      io.emit("receive_message", savedOrder); //emit to everyone
       return res.status(201).json({
         message: "Order Iteration updated successfully",
         status: true,
