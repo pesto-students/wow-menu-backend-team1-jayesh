@@ -66,17 +66,9 @@ const dataSchema = new mongoose.Schema(
       required: true,
       type: String,
     },
-    createdAt: {
-      type: Date,
-      default: () => Date.now(),
-    },
-    updatedAt: {
-      type: Date,
-      default: () => Date.now(),
-    },
   },
   {
-    timestamps: false,
+    timestamps: true,
     versionKey: false,
   },
 );
