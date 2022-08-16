@@ -97,7 +97,6 @@ const menuItemsController = {
       const id = req.params.id;
 
       req.body.createdBy = "admin";
-      req.body.updatedAt = Date.now();
 
       const result = await MenuItems.findByIdAndUpdate(id, req.body, {
         new: true,
