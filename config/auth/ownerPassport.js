@@ -2,8 +2,7 @@ import passport from "passport";
 import LocalStrategy from "passport-local";
 import { Users } from "../../src/models";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { SECRET_KEY } from "../index";
+import generateJWTToken from "../../src/utils/generateJWTTokenUtil";
 
 const localOpts = {
   usernameField: "emailId",
@@ -22,7 +21,7 @@ const localStrategy = new LocalStrategy(
       ) {
         const payload = user[0];
         payload["password"] = undefined;
-        let token = jwt.sign(JSON.stringify(payload), SECRET_KEY);
+        const token = generateJWTToken(payload);
         return done(null, { userDetails: payload, token });
       } else {
         return done(null, false);

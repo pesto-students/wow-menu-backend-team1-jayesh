@@ -47,17 +47,9 @@ const dataSchema = new mongoose.Schema(
     restaurant: {
       type: String,
     },
-    createdAt: {
-      type: Date,
-      default: () => Date.now(),
-    },
-    updatedAt: {
-      type: Date,
-      default: () => Date.now(),
-    },
   },
   {
-    timestamps: false,
+    timestamps: true,
     versionKey: false,
   },
 );
