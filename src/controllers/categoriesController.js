@@ -46,7 +46,6 @@ const categoriesController = {
       const options = { new: true };
 
       req.body.createdBy = "admin";
-      req.body.updatedAt = Date.now();
 
       if (req.body.isActive !== undefined) {
         const categoryData = await Categories.findById(id);
