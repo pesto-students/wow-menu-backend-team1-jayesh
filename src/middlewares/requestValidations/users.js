@@ -17,22 +17,22 @@ function getDataSchema(req) {
         return Joi.object({
           firstname: Joi.string(),
           lastname: Joi.string(),
-          is_verified: Joi.bool(),
-          email_id: Joi.string(),
+          isVerified: Joi.bool(),
+          emailId: Joi.string(),
           restaurant: Joi.string(),
           username: Joi.string(),
         });
       } else {
         return Joi.object({
           id: Joi.string().required(),
-          hashed_string: Joi.string().required(),
+          hashedString: Joi.string().required(),
         });
       }
     }
     case "POST": {
       if (req.path === "/login/owner" || req.path === "/login/owner") {
         return Joi.object({
-          email_id: Joi.string().email().required(),
+          emailId: Joi.string().email().required(),
           password: Joi.string().required(),
         });
       } else if (req.path === "/login/user" || req.path === "/login/user") {
@@ -45,9 +45,9 @@ function getDataSchema(req) {
           firstname: Joi.string().required(),
           lastname: Joi.string().required(),
           password: Joi.string().required(),
-          is_admin: Joi.bool(),
+          isAdmin: Joi.bool(),
           role: Joi.string().required(),
-          email_id: Joi.string().email(),
+          emailId: Joi.string().email(),
           username: Joi.string(),
           restaurant: Joi.string().required(),
         });
@@ -66,7 +66,7 @@ function getDataSchema(req) {
           lastname: Joi.string(),
           password: Joi.string(),
           role: Joi.string(),
-          is_admin: Joi.string(),
+          isAdmin: Joi.string(),
         });
       }
     }

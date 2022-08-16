@@ -7,12 +7,12 @@ const dataSchema = new mongoose.Schema(
       type: String,
       unique: true,
     },
-    is_active: {
+    isActive: {
       required: false,
       type: Boolean,
       default: true,
     },
-    created_by: {
+    createdBy: {
       required: true,
       type: String, //todo change to object id
     },
@@ -20,11 +20,11 @@ const dataSchema = new mongoose.Schema(
       required: true,
       type: String, //todo change to object id
     },
-    created_at: {
+    createdAt: {
       type: Date,
       default: () => Date.now(),
     },
-    updated_at: {
+    updatedAt: {
       type: Date,
       default: () => Date.now(),
     },
