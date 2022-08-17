@@ -3,7 +3,6 @@ import LocalStrategy from "passport-local";
 import { Users } from "../../src/models";
 import bcrypt from "bcrypt";
 import generateJWTToken from "../../src/utils/generateJWTTokenUtil";
-import { ACCESS_TOKEN_SECRET_KEY, REFRESH_TOKEN_SECRET_KEY } from "../index";
 
 const localStrategy = new LocalStrategy(
   {},
