@@ -1,9 +1,9 @@
 import Razorpay from "razorpay";
 import { Bills, Transaction } from "../models";
-// import crypto from "crypto";
+import crypto from "crypto";
 
 import {
-  // RAZORPAY_WEBHOOK_SECRET,
+  RAZORPAY_WEBHOOK_SECRET,
   RAZORPAY_KEY_DEV,
   RAZORPAY_SECRET_DEV,
 } from "../../config";
@@ -47,23 +47,25 @@ const razorpayController = {
   async verify(req, res) {
     try {
       // eslint-disable-next-line
-      // console.log(req.body);
-      // var generatedSignature = crypto
-      //   .createHmac("sha256", RAZORPAY_WEBHOOK_SECRET)
-      //   .update(JSON.stringify(req.body))
-      //   .digest("hex");
+      console.log("RAZORPAY_WEBHOOK_SECRET", RAZORPAY_WEBHOOK_SECRET);
+      // eslint-disable-next-line
+      console.log("req.body", req.body);
+      var generatedSignature = crypto
+        .createHmac("sha256", RAZORPAY_WEBHOOK_SECRET)
+        .update(JSON.stringify(req.body))
+        .digest("hex");
 
       // eslint-disable-next-line
-      // console.log("digest", generatedSignature);
+      console.log("digest", generatedSignature);
       // eslint-disable-next-line
-      // console.log("req.headers", req.headers["x-razorpay-signature"]);
-      // const valid = Razorpay.validateWebhookSignature(
-      //   req.body,
-      //   req.headers["x-razorpay-signature"],
-      //   RAZORPAY_WEBHOOK_SECRET,
-      // );
+      console.log("req.headers", req.headers["x-razorpay-signature"]);
+      const valid = Razorpay.validateWebhookSignature(
+        req.body,
+        req.headers["x-razorpay-signature"],
+        RAZORPAY_WEBHOOK_SECRET,
+      );
       // eslint-disable-next-line
-      // console.log("valid", valid);
+      console.log("valid", valid);
       // if (generatedSignature === req.headers["x-razorpay-signature"]) {
       // eslint-disable-next-line
       //   console.log("request is legit");
@@ -78,7 +80,7 @@ const razorpayController = {
       const savedTranaction = await transaction.save();
       const bill = await Bills.findById(payment.entity.notes.Bill);
       Object.assign(bill, {
-        payment_mode: "Online",
+        paymentMode: "Online",
         razorpay: savedTranaction.id,
       });
       await bill.save();

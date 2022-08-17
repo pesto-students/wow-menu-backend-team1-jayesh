@@ -15,7 +15,7 @@ function getDataSchema(req, res) {
   switch (req.method) {
     case "GET": {
       return Joi.object({
-        restaurant_id: Joi.string().required(),
+        restaurant: Joi.string().required(),
         id: Joi.string(),
         page: Joi.number().greater(0),
         limit: Joi.number(),
@@ -23,13 +23,13 @@ function getDataSchema(req, res) {
     }
     case "POST": {
       return Joi.object({
-        order_id: Joi.string().required(),
+        orderId: Joi.string().required(),
       });
     }
     case "PATCH": {
       return Joi.object({
-        table_no: Joi.number(),
-        payment_mode: Joi.string(),
+        tableNo: Joi.number(),
+        paymentMode: Joi.string(),
       });
     }
     case "PUT": {

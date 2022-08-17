@@ -14,16 +14,16 @@ const getUniqueItems = (order) => {
   orderItems.forEach((item) => {
     const modifiedItem = {
       // item: mongoose.Types.ObjectId(item.item_id.id),
-      item_id: item.item.id,
+      itemId: item.item.id,
       name: item.item.name,
       quantity: item.quantity,
       price: item.item.price,
     };
-    if (!itemMaps.has(modifiedItem.item_id))
-      itemMaps.set(modifiedItem.item_id, modifiedItem);
+    if (!itemMaps.has(modifiedItem.itemId))
+      itemMaps.set(modifiedItem.itemId, modifiedItem);
     else {
-      const prevItem = itemMaps.get(modifiedItem.item_id);
-      itemMaps.set(modifiedItem.item_id, {
+      const prevItem = itemMaps.get(modifiedItem.itemId);
+      itemMaps.set(modifiedItem.itemId, {
         ...modifiedItem,
         quantity: parseInt(modifiedItem.quantity) + parseInt(prevItem.quantity),
       });
@@ -72,7 +72,7 @@ const billsController = {
   },
   async postBill(req, res) {
     try {
-      const id = req.body.order_id;
+      const id = req.body.orderId;
       const order = await Orders.findById(id).populate({
         path: "iterations",
         populate: {
@@ -89,7 +89,7 @@ const billsController = {
           success: false,
           error: { message: "Order Not Found" },
         });
-      const bill = await Bills.find({ order_id: id });
+      const bill = await Bills.find({ order: id });
       if (bill.length !== 0)
         return res.status(422).json({
           success: false,
@@ -98,23 +98,21 @@ const billsController = {
           },
         });
       const items = getUniqueItems(order);
-      const totalQty = items.reduce((acc, curr) => {
-        return parseInt(acc) + parseInt(curr.quantity);
-      }, 0);
       const subtotal = parseFloat(
         items.reduce((acc, curr) => {
           return acc + curr.quantity * curr.price;
         }, 0),
       ).toFixed(2);
       const gst = parseFloat((5 * subtotal) / 100).toFixed(2); //after Restaurant Model need to bring details and get gst % from there
-      const totalAmt = parseFloat(subtotal + 2 * gst).toFixed(2);
+      const totalAmt = parseFloat(Number(2 * gst) + Number(subtotal)).toFixed(
+        2,
+      );
       const newBill = new Bills({
-        order_id: id,
-        table_no: order.table_no,
-        restaurant_id: order.restaurant_id,
-        created_by: "",
+        orderId: id,
+        tableNo: order.tableNo,
+        restaurant: order.restaurantId,
+        createdBy: "",
         items: items,
-        total_quantity: totalQty,
         subtotal: subtotal,
         cgst: gst,
         sgst: gst,

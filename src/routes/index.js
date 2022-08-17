@@ -74,7 +74,7 @@ router.post("/orders", ordersValidation, ordersController.postOrder);
 router.patch("/orders/:id/add", ordersValidation, ordersController.addToOrder);
 router.patch("/orders/:id", ordersValidation, ordersController.updateOrder);
 router.patch(
-  "/orders/:order_id/iteration/:iteration_id",
+  "/orders/:orderId/iteration/:iterationId",
   ordersValidation,
   ordersController.updateIteration,
 );

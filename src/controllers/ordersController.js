@@ -72,12 +72,12 @@ const ordersController = {
         iterations: [
           {
             items: req.body.items,
-            accepted_by: req.body.accepted_by,
+            acceptedBy: req.body.acceptedBy,
             instruction: req.body.instruction,
           },
         ],
-        table_no: req.body.table_no,
-        restaurant_id: req.body.restaurant_id,
+        tableNo: req.body.tableNo,
+        restaurant: req.body.restaurantId,
       });
       const savedOrder = await newOrder.save().then((odr) =>
         odr.populate({
@@ -114,7 +114,7 @@ const ordersController = {
       }
       order.iterations.push({
         items: req.body.items,
-        accepted_by: req.body.accepted_by,
+        acceptedBy: req.body.acceptedBy,
       });
       const savedOrder = await order.save().then((odr) =>
         odr.populate({
@@ -165,22 +165,40 @@ const ordersController = {
   },
   async updateIteration(req, res) {
     //sanitise using Joi
-    const order_id = req.params.order_id;
-    const iteration_id = req.params.iteration_id;
+    const orderId = req.params.orderId;
+    const iterationId = req.params.iterationId;
     const data = req.body;
     if (!data) {
       return res.status(400).json({ success: false, error: "Missing data" });
     }
     try {
-      const order = await Orders.findById(order_id);
+      const order = await Orders.findById(orderId);
       if (!order) {
         return res
           .status(400)
           .json({ success: false, error: "Incorrect Order Id" });
       }
-      var iteration = await order.iterations.id(iteration_id);
+      var iteration = await order.iterations.id(iterationId);
+      if (!iteration) {
+        return res
+          .status(400)
+          .json({ success: false, error: "Incorrect Iteration Id" });
+      }
       Object.assign(iteration, data);
-      const savedOrder = await order.save();
+      const savedOrder = await order.save().then((odr) =>
+        odr.populate({
+          path: "iterations",
+          populate: {
+            path: "items",
+            populate: {
+              path: "item",
+              model: "MenuItem",
+            },
+          },
+        }),
+      );
+      const io = req.app.locals.io;
+      io.emit(`${savedOrder.id}`, savedOrder); //emit to everyone
       return res.status(201).json({
         message: "Order Iteration updated successfully",
         status: true,
