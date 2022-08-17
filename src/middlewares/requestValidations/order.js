@@ -32,8 +32,8 @@ function getDataSchema(req, res) {
           )
           .required(),
         instruction: Joi.string().allow(""),
-        table_no: Joi.number().required(),
-        restaurant_id: Joi.string().required(),
+        tableNo: Joi.number().required(),
+        restaurantId: Joi.string().required(),
       });
     }
     case "PATCH": {
@@ -46,8 +46,8 @@ function getDataSchema(req, res) {
         ),
         instruction: Joi.string().allow(""),
         status: Joi.string(),
-        table_no: Joi.number(),
-        restaurant_id: Joi.number(),
+        tableNo: Joi.number(),
+        restaurantId: Joi.number(),
       });
     }
     case "PUT": {

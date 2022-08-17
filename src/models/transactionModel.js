@@ -10,14 +10,9 @@ const transactionSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Bill",
     },
-    created_at: {
-      type: Date,
-      immutable: true,
-      default: () => Date.now(),
-    },
   },
   {
-    timestamps: false,
+    timestamps: true,
     versionKey: false,
   },
 );
