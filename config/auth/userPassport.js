@@ -2,8 +2,7 @@ import passport from "passport";
 import LocalStrategy from "passport-local";
 import { Users } from "../../src/models";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { SECRET_KEY } from "../index";
+import generateJWTToken from "../../src/utils/generateJWTTokenUtil";
 
 const localStrategy = new LocalStrategy(
   {},
@@ -14,8 +13,15 @@ const localStrategy = new LocalStrategy(
         return done(null, false, { message: "Username is not registered" });
       } else {
         if (await bcrypt.compare(password, user[0].password)) {
-          let token = jwt.sign(JSON.stringify(user[0]), SECRET_KEY);
-          return done(null, token);
+          const payload = user[0];
+          payload["password"] = undefined;
+          const accessToken = generateJWTToken(payload, "access");
+          const refreshToken = generateJWTToken(payload, "refresh");
+          return done(null, {
+            userDetails: payload,
+            accessToken,
+            refreshToken,
+          });
         } else {
           return done(null, false);
         }

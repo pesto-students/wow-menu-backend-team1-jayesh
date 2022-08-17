@@ -30,7 +30,6 @@ function getDataSchema(req, res) {
       return Joi.object({
         category: Joi.string(),
         isActive: Joi.bool(),
-        restaurant: Joi.string().required(),
       });
     }
     default: {

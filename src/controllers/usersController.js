@@ -1,5 +1,8 @@
 import { Users } from "../models";
 import hashPasswordUtil from "../utils/hashPasswordUtil";
+import generateJWTToken from "../utils/generateJWTTokenUtil";
+import jwt from "jsonwebtoken";
+import { REFRESH_TOKEN_SECRET_KEY } from "../../config";
 
 const usersController = {
   async get(req, res, next) {
@@ -66,18 +69,18 @@ const usersController = {
         req.body.password = await hashPasswordUtil(req.body.password);
       }
 
-      req.body.updatedAt = Date.now();
-
       const result = await Users.findByIdAndUpdate(
         req.params.id,
         req.body,
         options,
       );
+      const token = generateJWTToken(result.password);
       result.password = undefined;
+      const response = { userDetails: result, token };
       res.status(200).json({
         message: `User data is successfully updated`,
         status: true,
-        data: result,
+        data: response,
       });
     } catch (error) {
       return next(error);
@@ -121,6 +124,19 @@ const usersController = {
 
   async authenticate(req, res) {
     res.json({ data: req.user });
+  },
+
+  async refreshAccessToken(req, res) {
+    const refreshToken = req.headers.authorization.split(" ")[1];
+    const data = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET_KEY);
+    const accessToken = generateJWTToken(data.payload, "access");
+    res.json({
+      data: {
+        userDetails: data.payload,
+        accessToken,
+        refreshToken,
+      },
+    });
   },
 };
 
