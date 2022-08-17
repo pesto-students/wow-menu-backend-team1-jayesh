@@ -1,6 +1,25 @@
 import jwt from "jsonwebtoken";
-import { SECRET_KEY } from "../../config";
+import {
+  ACCESS_TOKEN_SECRET_KEY,
+  REFRESH_TOKEN_SECRET_KEY,
+} from "../../config";
 
-export default function generateJWTToken(payload) {
-  return jwt.sign(JSON.stringify(payload), SECRET_KEY);
+const tokenProperties = {
+  access: {
+    options: {
+      expiresIn: "30 minutes",
+    },
+    secretKey: ACCESS_TOKEN_SECRET_KEY,
+  },
+  refresh: {
+    options: {
+      expiresIn: "1 day",
+    },
+    secretKey: REFRESH_TOKEN_SECRET_KEY,
+  },
+};
+
+export default function generateJWTToken(payload, tokenType) {
+  const { options, secretKey } = tokenProperties[tokenType];
+  return jwt.sign({ payload }, secretKey, options);
 }

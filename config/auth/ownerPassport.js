@@ -3,6 +3,7 @@ import LocalStrategy from "passport-local";
 import { Users } from "../../src/models";
 import bcrypt from "bcrypt";
 import generateJWTToken from "../../src/utils/generateJWTTokenUtil";
+import { ACCESS_TOKEN_SECRET_KEY, REFRESH_TOKEN_SECRET_KEY } from "../index";
 
 const localOpts = {
   usernameField: "emailId",
@@ -21,8 +22,9 @@ const localStrategy = new LocalStrategy(
       ) {
         const payload = user[0];
         payload["password"] = undefined;
-        const token = generateJWTToken(payload);
-        return done(null, { userDetails: payload, token });
+        const accessToken = generateJWTToken(payload, "access");
+        const refreshToken = generateJWTToken(payload, "refresh");
+        return done(null, { userDetails: payload, accessToken, refreshToken });
       } else {
         return done(null, false);
       }

@@ -18,7 +18,8 @@ import {
 
 import { authLocalOwner } from "../../config/auth/ownerPassport";
 import { authLocalUser } from "../../config/auth/userPassport";
-import { authJwt } from "../middlewares/authorization";
+import { authAccessToken } from "../middlewares/authorization/accessToken";
+import { authRefreshToken } from "../middlewares/authorization/refreshToken";
 
 const router = express.Router();
 
@@ -47,7 +48,7 @@ router.patch(
 );
 router.delete("/categories/:id", categoriesController.delete);
 
-router.get("/users", usersValidation, authJwt, usersController.get);
+router.get("/users", authAccessToken, usersValidation, usersController.get);
 router.get("/verify/mail", usersValidation, usersController.verifyEmail);
 router.get("/user/:id", usersController.getById);
 router.patch("/user/:id", usersValidation, usersController.update);
@@ -66,6 +67,11 @@ router.post(
   usersValidation,
   authLocalUser,
   usersController.authenticate,
+);
+router.get(
+  "/accesstoken",
+  authRefreshToken,
+  usersController.refreshAccessToken,
 );
 
 router.get("/orders", ordersValidation, ordersController.getOrders);
