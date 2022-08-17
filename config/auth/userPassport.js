@@ -3,6 +3,7 @@ import LocalStrategy from "passport-local";
 import { Users } from "../../src/models";
 import bcrypt from "bcrypt";
 import generateJWTToken from "../../src/utils/generateJWTTokenUtil";
+import { ACCESS_TOKEN_SECRET_KEY, REFRESH_TOKEN_SECRET_KEY } from "../index";
 
 const localStrategy = new LocalStrategy(
   {},
@@ -13,8 +14,15 @@ const localStrategy = new LocalStrategy(
         return done(null, false, { message: "Username is not registered" });
       } else {
         if (await bcrypt.compare(password, user[0].password)) {
-          const token = generateJWTToken(user[0]);
-          return done(null, token);
+          const payload = user[0];
+          payload["password"] = undefined;
+          const accessToken = generateJWTToken(payload, "access");
+          const refreshToken = generateJWTToken(payload, "refresh");
+          return done(null, {
+            userDetails: payload,
+            accessToken,
+            refreshToken,
+          });
         } else {
           return done(null, false);
         }
