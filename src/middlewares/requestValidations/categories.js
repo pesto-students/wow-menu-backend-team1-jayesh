@@ -28,7 +28,7 @@ function getDataSchema(req, res) {
     }
     case "PATCH": {
       return Joi.object({
-        category: Joi.string(),
+        name: Joi.string(),
         isActive: Joi.bool(),
       });
     }
