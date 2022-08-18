@@ -4,3 +4,4 @@ export { default as Users } from "./usersModel";
 export { default as Orders } from "./ordersModel";
 export { default as Bills } from "./billsModel";
 export { default as Transaction } from "./transactionModel";
+export { default as BlackListedTokens } from "./blacklistedTokensModel";
