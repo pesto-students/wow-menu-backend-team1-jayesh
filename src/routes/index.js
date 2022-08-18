@@ -6,6 +6,7 @@ import {
   billsController,
   usersController,
   razorpayController,
+  authController,
 } from "../controllers";
 
 import {
@@ -14,6 +15,7 @@ import {
   ordersValidation,
   billsValidation,
   usersValidation,
+  authValidation,
 } from "../middlewares/requestValidations";
 
 import { authLocalOwner } from "../../config/auth/ownerPassport";
@@ -49,7 +51,6 @@ router.patch(
 router.delete("/categories/:id", categoriesController.delete);
 
 router.get("/users", authAccessToken, usersValidation, usersController.get);
-router.get("/verify/mail", usersValidation, usersController.verifyEmail);
 router.get("/user/:id", usersController.getById);
 router.patch("/user/:id", usersValidation, usersController.update);
 router.patch("/owner/:id", usersValidation, usersController.update);
@@ -58,21 +59,19 @@ router.delete("/user/:id", usersController.delete);
 router.post("/signup", usersValidation, usersController.post);
 router.post(
   "/login/owner",
-  usersValidation,
+  authValidation,
   authLocalOwner,
-  usersController.authenticate,
+  authController.authenticate,
 );
 router.post(
   "/login/user",
-  usersValidation,
+  authValidation,
   authLocalUser,
-  usersController.authenticate,
+  authController.authenticate,
 );
-router.get(
-  "/accesstoken",
-  authRefreshToken,
-  usersController.refreshAccessToken,
-);
+router.get("/verify/mail", authValidation, authController.verifyEmail);
+router.get("/accesstoken", authRefreshToken, authController.refreshAccessToken);
+router.post("/logout", authAccessToken, authValidation, authController.logout);
 
 router.get("/orders", ordersValidation, ordersController.getOrders);
 router.get("/orders/:id", ordersController.getOrderById);
