@@ -2,6 +2,8 @@ import { BlackListedTokens, Users } from "../models";
 import jwt from "jsonwebtoken";
 import { REFRESH_TOKEN_SECRET_KEY } from "../../config";
 import generateJWTToken from "../utils/generateJWTTokenUtil";
+import moment from "moment";
+import isTokenBlackListedUtil from "../utils/isTokenBlackListedUtil";
 
 const authController = {
   async verifyEmail(req, res) {
@@ -51,17 +53,22 @@ const authController = {
       REFRESH_TOKEN_SECRET_KEY,
       async (err, userDetails) => {
         if (err) {
+          res.status(401).json({ message: "Invalid access token" });
+        } else if (await isTokenBlackListedUtil(refreshToken)) {
           res.status(401).json({ message: "Invalid refresh token" });
         } else {
+          const currentTs = new Date();
           const { payload } = userDetails;
           const data = [
             {
               token: refreshToken,
               userId: payload.id,
+              expiresAt: moment(currentTs).add("1", "day"),
             },
             {
               token: accessToken,
               userId: payload.id,
+              expiresAt: moment(currentTs).add("30", "minutes"),
             },
           ];
           try {
