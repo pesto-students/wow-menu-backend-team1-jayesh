@@ -14,8 +14,10 @@ const dataSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Users",
     },
+    expiresAt: { type: Date, expires: 10 },
   },
   {
+    timestamps: true,
     versionKey: false,
   },
 );
