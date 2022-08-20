@@ -49,7 +49,7 @@ function getDataSchema(req) {
           role: Joi.string().required(),
           emailId: Joi.string().email(),
           username: Joi.string(),
-          restaurant: Joi.string().required(),
+          restaurant: Joi.string(),
         });
       }
     }
