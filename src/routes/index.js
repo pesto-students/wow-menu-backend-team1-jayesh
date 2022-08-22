@@ -77,6 +77,16 @@ router.get("/orders", ordersValidation, ordersController.getOrders);
 router.get("/orders/:id", ordersController.getOrderById);
 router.post("/orders", ordersValidation, ordersController.postOrder);
 router.patch("/orders/:id/add", ordersValidation, ordersController.addToOrder);
+router.patch(
+  "/orders/:id/accept",
+  ordersValidation,
+  ordersController.acceptAll,
+);
+router.patch(
+  "/orders/:id/complete",
+  ordersValidation,
+  ordersController.completeAll,
+);
 router.patch("/orders/:id", ordersValidation, ordersController.updateOrder);
 router.patch(
   "/orders/:orderId/iteration/:iterationId",
