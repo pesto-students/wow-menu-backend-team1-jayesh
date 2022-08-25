@@ -28,6 +28,10 @@ const orderSchema = new Schema(
       type: Number,
       required: true,
     },
+    status: {
+      type: String,
+      default: "Pending",
+    },
     orderNo: String, // TODO:to be auto generated
     restaurant: String, // TODO:to be changed to id of restaurant and need to check if Id is present in Restaurant.
   },
