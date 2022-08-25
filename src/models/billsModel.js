@@ -49,7 +49,10 @@ const billSchema = new Schema(
       required: true,
     },
     bill_no: String, // TODO:to be auto generated
-    restaurant_id: String, // TODO:to be changed to id of restaurant and need to check if Id is present in Restaurant.
+    restaurant: {
+      type: Schema.Types.ObjectId,
+      ref: "Restaurant",
+    },
     createdBy: {
       type: String,
       default: "",

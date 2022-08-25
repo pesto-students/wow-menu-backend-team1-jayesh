@@ -72,7 +72,7 @@ const billsController = {
   },
   async postBill(req, res) {
     try {
-      const id = req.body.orderId;
+      const id = req.body.order;
       const order = await Orders.findById(id).populate({
         path: "iterations",
         populate: {
@@ -110,7 +110,7 @@ const billsController = {
       const newBill = new Bills({
         orderId: id,
         tableNo: order.tableNo,
-        restaurant: order.restaurantId,
+        restaurant: order.restaurant,
         createdBy: "",
         items: items,
         subtotal: subtotal,

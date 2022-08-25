@@ -80,7 +80,7 @@ const ordersController = {
           },
         ],
         tableNo: req.body.tableNo,
-        restaurant: req.body.restaurantId,
+        restaurant: req.body.restaurant,
       });
       const savedOrder = await newOrder.save().then((odr) =>
         odr.populate({

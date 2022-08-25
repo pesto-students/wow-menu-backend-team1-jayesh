@@ -23,7 +23,7 @@ function getDataSchema(req, res) {
     }
     case "POST": {
       return Joi.object({
-        orderId: Joi.string().required(),
+        order: Joi.string().required(),
       });
     }
     case "PATCH": {
