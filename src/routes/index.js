@@ -58,11 +58,7 @@ router.patch("/user/:id", usersValidation, usersController.update);
 router.patch("/owner/:id", usersValidation, usersController.update);
 router.delete("/user/:id", usersController.delete);
 
-router.get(
-  "/restaurants",
-  restaurantsValidation,
-  restaurantsController.get,
-);
+router.get("/restaurants", restaurantsValidation, restaurantsController.get);
 router.get("/restaurant/:id", restaurantsController.getById);
 router.post("/restaurant", restaurantsValidation, restaurantsController.post);
 router.patch(
