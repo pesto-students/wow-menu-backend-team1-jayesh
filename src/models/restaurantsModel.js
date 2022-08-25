@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const dataSchema = new mongoose.Schema(
   {
@@ -31,7 +31,8 @@ const dataSchema = new mongoose.Schema(
     },
     createdBy: {
       required: true,
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "Users",
     },
   },
   {

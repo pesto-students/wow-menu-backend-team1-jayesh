@@ -1,4 +1,4 @@
-import { Restaurants } from "../models";
+import { Restaurants, Users } from "../models";
 
 const restaurantsController = {
   async get(req, res, next) {
@@ -27,11 +27,16 @@ const restaurantsController = {
       gstNumber: req.body.gstNumber,
       gstPercentage: req.body.gstPercentage,
       totalTables: req.body.totalTables,
-      createdBy: "owner",
+      createdBy: req.body.createdBy,
     });
 
     try {
       const result = await data.save();
+      const user = await Users.findById(req.body.createdBy);
+      Object.assign(user, {
+        restaurant: result.id,
+      });
+      await user.save();
       res.status(201).json({
         message: "Restaurant successfully added",
         status: true,
@@ -47,8 +52,6 @@ const restaurantsController = {
       const id = req.params.id;
 
       const options = { new: true };
-
-      req.body.createdBy = "owner";
 
       const result = await Restaurants.findByIdAndUpdate(id, req.body, options);
       res.status(200).json({
