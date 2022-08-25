@@ -21,6 +21,7 @@ function getDataSchema(req) {
           emailId: Joi.string(),
           restaurant: Joi.string(),
           username: Joi.string(),
+          role: Joi.string(),
         });
       } else {
         return Joi.object({
@@ -66,7 +67,7 @@ function getDataSchema(req) {
           lastname: Joi.string(),
           password: Joi.string(),
           role: Joi.string(),
-          isAdmin: Joi.string(),
+          isAdmin: Joi.boolean(),
         });
       }
     }

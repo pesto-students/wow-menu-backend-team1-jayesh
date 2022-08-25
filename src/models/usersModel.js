@@ -25,6 +25,7 @@ const dataSchema = new mongoose.Schema(
     role: {
       required: true,
       type: String,
+      lowercase: true,
     },
     emailId: {
       type: String,
