@@ -18,10 +18,7 @@ const io = new Server(httpServer, {
   },
 });
 
-io.on("connection", (socket) => {
-  // eslint-disable-next-line
-  console.log("User connected: ", socket.id);
-});
+io.on("connection", () => {});
 mongoose.connect(DATABASE_URL);
 const db = mongoose.connection;
 db.on("error", () => console.error("database connection failed"));

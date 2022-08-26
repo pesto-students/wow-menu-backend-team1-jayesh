@@ -53,10 +53,7 @@ const billSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Restaurant",
     },
-    createdBy: {
-      type: String,
-      default: "",
-    }, // TODO:to be changed to id of user and need to check if Id is present in User.
+    createdBy: String,
   },
   {
     timestamps: true,

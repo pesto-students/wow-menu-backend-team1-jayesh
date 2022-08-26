@@ -73,17 +73,22 @@ const billsController = {
   async postBill(req, res) {
     try {
       const id = req.body.order;
-      const order = await Orders.findById(id).populate({
-        path: "iterations",
-        populate: {
-          path: "items",
+      const order = await Orders.findById(id).populate([
+        {
+          path: "iterations",
           populate: {
-            path: "item",
-            model: "MenuItem",
+            path: "items",
+            populate: {
+              path: "item",
+              model: "MenuItem",
+            },
           },
         },
-      });
-
+        {
+          path: "acceptedBy",
+          model: "Users",
+        },
+      ]);
       if (!order)
         return res.status(404).json({
           success: false,
@@ -107,11 +112,14 @@ const billsController = {
       const totalAmt = parseFloat(Number(2 * gst) + Number(subtotal)).toFixed(
         2,
       );
+      let manager = "";
+      if (order.acceptedBy)
+        manager = `${order.acceptedBy.firstname} ${order.acceptedBy.lastname}`;
       const newBill = new Bills({
         orderId: id,
         tableNo: order.tableNo,
         restaurant: order.restaurant,
-        createdBy: "",
+        createdBy: manager,
         items: items,
         subtotal: subtotal,
         cgst: gst,
