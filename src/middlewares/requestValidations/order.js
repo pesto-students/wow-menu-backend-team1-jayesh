@@ -47,6 +47,7 @@ function getDataSchema(req, res) {
         ),
         instruction: Joi.string().allow(""),
         status: Joi.string(),
+        acceptedBy: Joi.string(),
         tableNo: Joi.number(),
         restaurant: Joi.number(),
       });

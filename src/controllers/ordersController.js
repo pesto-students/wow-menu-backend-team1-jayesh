@@ -9,32 +9,45 @@ const ordersController = {
         const { page, limit } = req.query;
         orders = await Orders.find(req.query)
           .sort({ status: -1 })
-          .populate({
-            path: "iterations",
-            populate: {
-              path: "items",
+          .populate([
+            {
+              path: "iterations",
               populate: {
-                path: "item",
-                model: "MenuItem",
+                path: "items",
+                populate: {
+                  path: "item",
+                  model: "MenuItem",
+                },
               },
             },
-          })
+            {
+              path: "acceptedBy",
+              model: "Users",
+            },
+          ])
           .limit(limit)
           .skip((page - 1) * limit);
       } else {
         orders = await Orders.find(req.query)
           .sort({ status: -1 })
-          .populate({
-            path: "iterations",
-            populate: {
-              path: "items",
+          .populate([
+            {
+              path: "iterations",
               populate: {
-                path: "item",
-                model: "MenuItem",
+                path: "items",
+                populate: {
+                  path: "item",
+                  model: "MenuItem",
+                },
               },
             },
-          });
+            {
+              path: "acceptedBy",
+              model: "Users",
+            },
+          ]);
       }
+
       res.status(200).json({ status: true, data: orders });
     } catch (error) {
       res.status(500).json({
@@ -46,21 +59,30 @@ const ordersController = {
   async getOrderById(req, res) {
     try {
       const id = req.params.id;
-      const order = await Orders.findById(id).populate({
-        path: "iterations",
-        populate: {
-          path: "items",
+      const order = await Orders.findById(id).populate([
+        {
+          path: "iterations",
           populate: {
-            path: "item",
-            model: "MenuItem",
+            path: "items",
+            populate: {
+              path: "item",
+              model: "MenuItem",
+            },
           },
         },
-      });
+        {
+          path: "acceptedBy",
+          model: "Users",
+        },
+      ]);
       if (!order)
         return res.status(404).json({
           success: false,
           error: { message: "Order Not Found" },
         });
+      if (order.acceptedBy) {
+        order.acceptedBy.password = undefined;
+      }
       res.status(200).json({ status: true, data: order });
     } catch (error) {
       res.status(500).json({
@@ -75,7 +97,6 @@ const ordersController = {
         iterations: [
           {
             items: req.body.items,
-            acceptedBy: req.body.acceptedBy,
             instruction: req.body.instruction,
           },
         ],
@@ -83,17 +104,26 @@ const ordersController = {
         restaurant: req.body.restaurant,
       });
       const savedOrder = await newOrder.save().then((odr) =>
-        odr.populate({
-          path: "iterations",
-          populate: {
-            path: "items",
+        odr.populate([
+          {
+            path: "iterations",
             populate: {
-              path: "item",
-              model: "MenuItem",
+              path: "items",
+              populate: {
+                path: "item",
+                model: "MenuItem",
+              },
             },
           },
-        }),
+          {
+            path: "acceptedBy",
+            model: "Users",
+          },
+        ]),
       );
+      if (savedOrder.acceptedBy) {
+        savedOrder.acceptedBy.password = undefined;
+      }
       const io = req.app.locals.io;
       io.emit(`${savedOrder.restaurant}`, savedOrder); //emit to everyone
       return res.status(201).json({
@@ -119,22 +149,30 @@ const ordersController = {
       }
       order.iterations.push({
         items: req.body.items,
-        acceptedBy: req.body.acceptedBy,
         instruction: req.body.instruction,
       });
       order.status = "Pending";
       const savedOrder = await order.save().then((odr) =>
-        odr.populate({
-          path: "iterations",
-          populate: {
-            path: "items",
+        odr.populate([
+          {
+            path: "iterations",
             populate: {
-              path: "item",
-              model: "MenuItem",
+              path: "items",
+              populate: {
+                path: "item",
+                model: "MenuItem",
+              },
             },
           },
-        }),
+          {
+            path: "acceptedBy",
+            model: "Users",
+          },
+        ]),
       );
+      if (savedOrder.acceptedBy) {
+        savedOrder.acceptedBy.password = undefined;
+      }
       const io = req.app.locals.io;
       io.emit(`${savedOrder.restaurant}`, savedOrder); //emit to everyone
       return res.status(201).json({
@@ -174,6 +212,10 @@ const ordersController = {
   },
   async acceptAll(req, res) {
     try {
+      const data = req.body;
+      if (!data) {
+        return res.status(400).json({ success: false, error: "Missing data" });
+      }
       const order = await Orders.findById(req.params.id);
       if (!order) {
         return res.status(404).json({
@@ -190,18 +232,28 @@ const ordersController = {
       });
       Object.assign(order, { iterations: newIteration });
       order.status = "Incomplete";
+      order.acceptedBy = req.body.acceptedBy;
       const savedOrder = await order.save().then((odr) =>
-        odr.populate({
-          path: "iterations",
-          populate: {
-            path: "items",
+        odr.populate([
+          {
+            path: "iterations",
             populate: {
-              path: "item",
-              model: "MenuItem",
+              path: "items",
+              populate: {
+                path: "item",
+                model: "MenuItem",
+              },
             },
           },
-        }),
+          {
+            path: "acceptedBy",
+            model: "Users",
+          },
+        ]),
       );
+      if (savedOrder.acceptedBy) {
+        savedOrder.acceptedBy.password = undefined;
+      }
       const io = req.app.locals.io;
       io.emit(`${savedOrder.id}`, savedOrder); //emit to everyone
       io.emit(`${savedOrder.restaurant}`, savedOrder); //emit to everyone
@@ -236,17 +288,26 @@ const ordersController = {
       Object.assign(order, { iterations: newIteration });
       order.status = "Complete";
       const savedOrder = await order.save().then((odr) =>
-        odr.populate({
-          path: "iterations",
-          populate: {
-            path: "items",
+        odr.populate([
+          {
+            path: "iterations",
             populate: {
-              path: "item",
-              model: "MenuItem",
+              path: "items",
+              populate: {
+                path: "item",
+                model: "MenuItem",
+              },
             },
           },
-        }),
+          {
+            path: "acceptedBy",
+            model: "Users",
+          },
+        ]),
       );
+      if (savedOrder.acceptedBy) {
+        savedOrder.acceptedBy.password = undefined;
+      }
       const io = req.app.locals.io;
       io.emit(`${savedOrder.id}`, savedOrder); //emit to everyone
       io.emit(`${savedOrder.restaurant}`, savedOrder); //emit to everyone
@@ -263,7 +324,6 @@ const ordersController = {
     }
   },
   async updateIteration(req, res) {
-    //sanitise using Joi
     const orderId = req.params.orderId;
     const iterationId = req.params.iterationId;
     const data = req.body;
@@ -292,18 +352,28 @@ const ordersController = {
         (iteration) => iteration.status === "Preparing",
       );
       if (isPreparing.length === 0) order.status = "Complete";
+      if (req.body.acceptedBy) order.acceptedBy = req.body.acceptedBy;
       const savedOrder = await order.save().then((odr) =>
-        odr.populate({
-          path: "iterations",
-          populate: {
-            path: "items",
+        odr.populate([
+          {
+            path: "iterations",
             populate: {
-              path: "item",
-              model: "MenuItem",
+              path: "items",
+              populate: {
+                path: "item",
+                model: "MenuItem",
+              },
             },
           },
-        }),
+          {
+            path: "acceptedBy",
+            model: "Users",
+          },
+        ]),
       );
+      if (savedOrder.acceptedBy) {
+        savedOrder.acceptedBy.password = undefined;
+      }
       const io = req.app.locals.io;
       io.emit(`${savedOrder.id}`, savedOrder); //emit to everyone
       io.emit(`${savedOrder.restaurant}`, savedOrder); //emit to everyone

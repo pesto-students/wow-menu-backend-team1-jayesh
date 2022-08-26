@@ -19,9 +19,9 @@ const orderSchema = new Schema(
           default: () => Date.now(),
         },
         acceptedBy: {
-          type: String,
-          default: "",
-        }, // TODO:to be changed to id of user and need to check if Id is present in User.
+          type: Schema.Types.ObjectId,
+          ref: "Users",
+        },
       },
     ],
     tableNo: {
@@ -31,6 +31,10 @@ const orderSchema = new Schema(
     status: {
       type: String,
       default: "Pending",
+    },
+    acceptedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "Users",
     },
     orderNo: String, // TODO:to be auto generated
     restaurant: {
