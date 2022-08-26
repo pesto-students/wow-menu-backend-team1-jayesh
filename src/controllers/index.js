@@ -6,3 +6,4 @@ export { default as ordersController } from "./ordersController";
 export { default as billsController } from "./billsController";
 export { default as razorpayController } from "./razorpayController";
 export { default as authController } from "./authController";
+export { default as notificationController } from "./notificationController";
