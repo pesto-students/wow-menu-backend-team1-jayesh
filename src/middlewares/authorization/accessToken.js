@@ -1,6 +1,4 @@
-import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
 import { Users } from "../../models";
-import passport from "passport";
 import { ACCESS_TOKEN_SECRET_KEY } from "../../../config";
 import isTokenBlackListedUtil from "../../utils/isTokenBlackListedUtil";
 import jwt from "jsonwebtoken";
