@@ -27,36 +27,69 @@ import { authRefreshToken } from "../middlewares/authorization/refreshToken";
 
 const router = express.Router();
 
-router.get("/menu-items", menuItemsValidation, menuItemsController.get);
+router.get(
+  "/menu-items",
+  authAccessToken,
+  menuItemsValidation,
+  menuItemsController.get,
+);
 router.get(
   "/menu-items/group-by-category",
+  authAccessToken,
   menuItemsValidation,
   menuItemsController.groupByCategories,
 );
-router.get("/menu-items/:id", menuItemsController.getById);
-router.post("/menu-items", menuItemsValidation, menuItemsController.post);
+router.get("/menu-items/:id", authAccessToken, menuItemsController.getById);
+router.post(
+  "/menu-items",
+  authAccessToken,
+  menuItemsValidation,
+  menuItemsController.post,
+);
 router.patch(
   "/menu-items/:id",
+  authAccessToken,
   menuItemsValidation,
   menuItemsController.update,
 );
-router.delete("/menu-items/:id", menuItemsController.delete);
+router.delete("/menu-items/:id", authAccessToken, menuItemsController.delete);
 
-router.get("/categories", categoriesValidation, categoriesController.get);
-router.get("/categories/:id", categoriesController.getById);
-router.post("/categories", categoriesValidation, categoriesController.post);
+router.get(
+  "/categories",
+  authAccessToken,
+  categoriesValidation,
+  categoriesController.get,
+);
+router.get("/categories/:id", authAccessToken, categoriesController.getById);
+router.post(
+  "/categories",
+  authAccessToken,
+  categoriesValidation,
+  categoriesController.post,
+);
 router.patch(
   "/categories/:id",
+  authAccessToken,
   categoriesValidation,
   categoriesController.update,
 );
-router.delete("/categories/:id", categoriesController.delete);
+router.delete("/categories/:id", authAccessToken, categoriesController.delete);
 
 router.get("/users", authAccessToken, usersValidation, usersController.get);
-router.get("/user/:id", usersController.getById);
-router.patch("/user/:id", usersValidation, usersController.update);
-router.patch("/owner/:id", usersValidation, usersController.update);
-router.delete("/user/:id", usersController.delete);
+router.get("/user/:id", authAccessToken, usersController.getById);
+router.patch(
+  "/user/:id",
+  authAccessToken,
+  usersValidation,
+  usersController.update,
+);
+router.patch(
+  "/owner/:id",
+  authAccessToken,
+  usersValidation,
+  usersController.update,
+);
+router.delete("/user/:id", authAccessToken, usersController.delete);
 
 router.get("/restaurants", restaurantsValidation, restaurantsController.get);
 router.get("/restaurant/:id", restaurantsController.getById);
