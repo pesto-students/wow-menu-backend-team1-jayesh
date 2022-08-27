@@ -231,7 +231,7 @@ const ordersController = {
         };
       });
       Object.assign(order, { iterations: newIteration });
-      order.status = "Incomplete";
+      order.status = "In progress";
       order.acceptedBy = req.body.acceptedBy;
       const savedOrder = await order.save().then((odr) =>
         odr.populate([
@@ -347,7 +347,7 @@ const ordersController = {
       const isPending = order.iterations.filter(
         (iteration) => iteration.status === "Pending",
       );
-      if (isPending.length === 0) order.status = "Incomplete";
+      if (isPending.length === 0) order.status = "In progress";
       const isPreparing = order.iterations.filter(
         (iteration) => iteration.status === "Preparing",
       );
