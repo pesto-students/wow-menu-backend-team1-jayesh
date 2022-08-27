@@ -103,18 +103,8 @@ router.patch(
 router.delete("/restaurant/:id", restaurantsController.delete);
 
 router.post("/signup", usersValidation, usersController.post);
-router.post(
-  "/login/owner",
-  authValidation,
-  authLocalOwner,
-  authController.authenticate,
-);
-router.post(
-  "/login/user",
-  authValidation,
-  authLocalUser,
-  authController.authenticate,
-);
+router.post("/login/owner", authLocalOwner, authController.authenticate);
+router.post("/login/user", authLocalUser, authController.authenticate);
 router.get("/verify/mail", authValidation, authController.verifyEmail);
 router.get("/accesstoken", authRefreshToken, authController.refreshAccessToken);
 router.post("/logout", authAccessToken, authValidation, authController.logout);
