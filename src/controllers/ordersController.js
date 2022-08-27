@@ -2,9 +2,9 @@ import { Orders } from "../models";
 
 const ordersController = {
   async getOrders(req, res) {
-    //need to check restaurant id when restaurant model is done
     try {
       let orders;
+      req.query.restaurant = req.user.restaurant;
       if (req.query.limit) {
         const { page, limit } = req.query;
         orders = await Orders.find(req.query)
@@ -17,12 +17,14 @@ const ordersController = {
                 populate: {
                   path: "item",
                   model: "MenuItem",
+                  select: { _id: 1, name: 1, price: 1, imageUrl: 1 },
                 },
               },
             },
             {
               path: "acceptedBy",
               model: "Users",
+              select: { _id: 1, firstname: 1, lastname: 1 },
             },
           ])
           .limit(limit)
@@ -38,12 +40,14 @@ const ordersController = {
                 populate: {
                   path: "item",
                   model: "MenuItem",
+                  select: { _id: 1, name: 1, price: 1, imageUrl: 1 },
                 },
               },
             },
             {
               path: "acceptedBy",
               model: "Users",
+              select: { _id: 1, firstname: 1, lastname: 1 },
             },
           ]);
       }
@@ -67,12 +71,14 @@ const ordersController = {
             populate: {
               path: "item",
               model: "MenuItem",
+              select: { _id: 1, name: 1, price: 1, imageUrl: 1 },
             },
           },
         },
         {
           path: "acceptedBy",
           model: "Users",
+          select: { _id: 1, firstname: 1, lastname: 1 },
         },
       ]);
       if (!order)
@@ -112,18 +118,17 @@ const ordersController = {
               populate: {
                 path: "item",
                 model: "MenuItem",
+                select: { _id: 1, name: 1, price: 1, imageUrl: 1 },
               },
             },
           },
           {
             path: "acceptedBy",
             model: "Users",
+            select: { _id: 1, firstname: 1, lastname: 1 },
           },
         ]),
       );
-      if (savedOrder.acceptedBy) {
-        savedOrder.acceptedBy.password = undefined;
-      }
       const io = req.app.locals.io;
       io.emit(`${savedOrder.restaurant}`, savedOrder); //emit to everyone
       return res.status(201).json({
@@ -161,18 +166,17 @@ const ordersController = {
               populate: {
                 path: "item",
                 model: "MenuItem",
+                select: { _id: 1, name: 1, price: 1, imageUrl: 1 },
               },
             },
           },
           {
             path: "acceptedBy",
             model: "Users",
+            select: { _id: 1, firstname: 1, lastname: 1 },
           },
         ]),
       );
-      if (savedOrder.acceptedBy) {
-        savedOrder.acceptedBy.password = undefined;
-      }
       const io = req.app.locals.io;
       io.emit(`${savedOrder.restaurant}`, savedOrder); //emit to everyone
       return res.status(201).json({
@@ -232,7 +236,7 @@ const ordersController = {
       });
       Object.assign(order, { iterations: newIteration });
       order.status = "In progress";
-      order.acceptedBy = req.body.acceptedBy;
+      order.acceptedBy = req.user._id;
       const savedOrder = await order.save().then((odr) =>
         odr.populate([
           {
@@ -242,18 +246,17 @@ const ordersController = {
               populate: {
                 path: "item",
                 model: "MenuItem",
+                select: { _id: 1, name: 1, price: 1, imageUrl: 1 },
               },
             },
           },
           {
             path: "acceptedBy",
             model: "Users",
+            select: { _id: 1, firstname: 1, lastname: 1 },
           },
         ]),
       );
-      if (savedOrder.acceptedBy) {
-        savedOrder.acceptedBy.password = undefined;
-      }
       const io = req.app.locals.io;
       io.emit(`${savedOrder.id}`, savedOrder); //emit to everyone
       io.emit(`${savedOrder.restaurant}`, savedOrder); //emit to everyone
@@ -296,18 +299,17 @@ const ordersController = {
               populate: {
                 path: "item",
                 model: "MenuItem",
+                select: { _id: 1, name: 1, price: 1, imageUrl: 1 },
               },
             },
           },
           {
             path: "acceptedBy",
             model: "Users",
+            select: { _id: 1, firstname: 1, lastname: 1 },
           },
         ]),
       );
-      if (savedOrder.acceptedBy) {
-        savedOrder.acceptedBy.password = undefined;
-      }
       const io = req.app.locals.io;
       io.emit(`${savedOrder.id}`, savedOrder); //emit to everyone
       io.emit(`${savedOrder.restaurant}`, savedOrder); //emit to everyone
@@ -352,7 +354,7 @@ const ordersController = {
         (iteration) => iteration.status === "Preparing",
       );
       if (isPreparing.length === 0) order.status = "Complete";
-      if (req.body.acceptedBy) order.acceptedBy = req.body.acceptedBy;
+      if (req.body.status !== "Completed") order.acceptedBy = req.user._id;
       const savedOrder = await order.save().then((odr) =>
         odr.populate([
           {
@@ -362,18 +364,17 @@ const ordersController = {
               populate: {
                 path: "item",
                 model: "MenuItem",
+                select: { _id: 1, name: 1, price: 1, imageUrl: 1 },
               },
             },
           },
           {
             path: "acceptedBy",
             model: "Users",
+            select: { _id: 1, firstname: 1, lastname: 1 },
           },
         ]),
       );
-      if (savedOrder.acceptedBy) {
-        savedOrder.acceptedBy.password = undefined;
-      }
       const io = req.app.locals.io;
       io.emit(`${savedOrder.id}`, savedOrder); //emit to everyone
       io.emit(`${savedOrder.restaurant}`, savedOrder); //emit to everyone

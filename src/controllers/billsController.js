@@ -34,9 +34,9 @@ const getUniqueItems = (order) => {
 
 const billsController = {
   async getBills(req, res) {
-    //need to check restaurant id when restaurant model is done
     try {
       let bills;
+      req.query.restaurant = req.user.restaurant;
       if (req.query.limit) {
         const { page, limit } = req.query;
         bills = await Bills.find(req.query)
