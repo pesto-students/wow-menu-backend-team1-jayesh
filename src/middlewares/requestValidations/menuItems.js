@@ -18,10 +18,12 @@ function getDataSchema(req, res) {
         req.path === "/menu-items/group-by-category/"
       ) {
         return Joi.object({
+          restaurant: Joi.string().required(),
           limit: Joi.number().greater(0),
         });
       } else {
         return Joi.object({
+          restaurant: Joi.string().required(),
           name: Joi.string(),
           id: Joi.string(),
           category: Joi.string(),

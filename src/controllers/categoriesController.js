@@ -3,7 +3,7 @@ import { Categories, MenuItems } from "../models";
 const categoriesController = {
   async get(req, res, next) {
     try {
-      req.query.restaurant = req.user.restaurant;
+      // req.query.restaurant = req.user.restaurant;
       const data = await Categories.find(req.query);
       res.status(200).json({ status: true, data: data });
     } catch (error) {

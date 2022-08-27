@@ -4,7 +4,7 @@ const menuItemsController = {
   async get(req, res, next) {
     try {
       let data;
-      req.query.restaurant = req.user.restaurant;
+      // req.query.restaurant = req.user.restaurant;
       if (req.query.name !== undefined) {
         const val = req.query.name;
         req.query.name = {

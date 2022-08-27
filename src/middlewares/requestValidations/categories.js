@@ -14,6 +14,7 @@ function getDataSchema(req, res) {
   switch (req.method) {
     case "GET": {
       return Joi.object({
+        restaurant: Joi.string().required(),
         category: Joi.string(),
         isActive: Joi.bool(),
       });
@@ -22,6 +23,7 @@ function getDataSchema(req, res) {
       return Joi.object({
         name: Joi.string().required(),
         isActive: Joi.bool(),
+        restaurant: Joi.string().required(),
       });
     }
     case "PATCH": {
