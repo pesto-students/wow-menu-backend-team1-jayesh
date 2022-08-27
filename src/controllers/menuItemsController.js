@@ -4,6 +4,7 @@ const menuItemsController = {
   async get(req, res, next) {
     try {
       let data;
+      req.query.restaurant = req.user.restaurant;
       if (req.query.name !== undefined) {
         const val = req.query.name;
         req.query.name = {
@@ -29,6 +30,7 @@ const menuItemsController = {
   async groupByCategories(req, res, next) {
     try {
       let limit = 5;
+      req.query.restaurant = req.user.restaurant;
       if (req.query.limit !== undefined) {
         limit = req.query.limit;
       }
@@ -76,8 +78,8 @@ const menuItemsController = {
       isVeg: req.body.isVeg,
       spicy: req.body.spicy,
       imageUrl: req.body.imageUrl,
-      createdBy: "admin", //todo get the createdBy through the token
-      restaurant: req.body.restaurant,
+      createdBy: req.user._id,
+      restaurant: req.user.restaurant,
     });
 
     try {
@@ -96,7 +98,7 @@ const menuItemsController = {
     try {
       const id = req.params.id;
 
-      req.body.createdBy = "admin";
+      req.body.createdBy = req.user._id;
 
       const result = await MenuItems.findByIdAndUpdate(id, req.body, {
         new: true,

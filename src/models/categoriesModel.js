@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const dataSchema = new mongoose.Schema(
   {
@@ -14,7 +14,7 @@ const dataSchema = new mongoose.Schema(
     },
     createdBy: {
       required: true,
-      type: String, //todo change to object id
+      type: Schema.Types.ObjectId,
     },
     restaurant: {
       required: true,

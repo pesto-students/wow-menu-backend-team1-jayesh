@@ -60,7 +60,7 @@ const dataSchema = new mongoose.Schema(
     },
     createdBy: {
       required: true,
-      type: String,
+      type: Schema.Types.ObjectId,
     },
     restaurant: {
       required: true,
