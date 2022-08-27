@@ -92,15 +92,26 @@ router.patch(
 );
 router.delete("/user/:id", authAccessToken, usersController.delete);
 
-router.get("/restaurants", restaurantsValidation, restaurantsController.get);
-router.get("/restaurant/:id", restaurantsController.getById);
-router.post("/restaurant", restaurantsValidation, restaurantsController.post);
+router.get(
+  "/restaurants",
+  authAccessToken,
+  restaurantsValidation,
+  restaurantsController.get,
+);
+router.get("/restaurant/:id", authAccessToken, restaurantsController.getById);
+router.post(
+  "/restaurant",
+  authAccessToken,
+  restaurantsValidation,
+  restaurantsController.post,
+);
 router.patch(
   "/restaurant/:id",
+  authAccessToken,
   restaurantsValidation,
   restaurantsController.update,
 );
-router.delete("/restaurant/:id", restaurantsController.delete);
+router.delete("/restaurant/:id", authAccessToken, restaurantsController.delete);
 
 router.post("/signup", usersValidation, usersController.post);
 router.post(

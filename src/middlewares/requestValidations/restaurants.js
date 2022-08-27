@@ -30,7 +30,7 @@ function getDataSchema(req, res) {
         gstNumber: Joi.string().required(),
         gstPercentage: Joi.number().required(),
         totalTables: Joi.number().required(),
-        createdBy: Joi.string().required(),
+        // createdBy: Joi.string().required(),
       });
     }
     case "PATCH": {
