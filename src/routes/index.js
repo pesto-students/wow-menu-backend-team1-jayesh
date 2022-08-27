@@ -8,6 +8,7 @@ import {
   restaurantsController,
   razorpayController,
   authController,
+  notificationController,
 } from "../controllers";
 
 import {
@@ -115,5 +116,14 @@ router.delete("/bills/:id", billsController.deleteBill);
 
 router.get("/razorpay/:id", razorpayController.getPaymentDetail);
 router.post("/razorpay/verify", razorpayController.verify);
+
+router.post(
+  "/callWaiter/:restaurantId/:tableNo",
+  notificationController.callWaiter,
+);
+router.post(
+  "/payByCash/:restaurantId/:tableNo",
+  notificationController.payByCash,
+);
 
 export default router;
