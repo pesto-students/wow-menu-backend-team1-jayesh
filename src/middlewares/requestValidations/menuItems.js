@@ -48,7 +48,6 @@ function getDataSchema(req, res) {
         isVeg: Joi.bool().required(),
         spicy: Joi.string(),
         imageUrl: Joi.string(),
-        restaurant: Joi.string().required(),
       });
     }
     case "PATCH": {
@@ -63,7 +62,6 @@ function getDataSchema(req, res) {
         isVeg: Joi.bool(),
         spicy: Joi.string(),
         imageUrl: Joi.string(),
-        restaurant: Joi.string(),
       });
     }
     default: {

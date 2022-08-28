@@ -3,6 +3,7 @@ import { Categories, MenuItems } from "../models";
 const categoriesController = {
   async get(req, res, next) {
     try {
+      // req.query.restaurant = req.user.restaurant;
       const data = await Categories.find(req.query);
       res.status(200).json({ status: true, data: data });
     } catch (error) {
@@ -23,8 +24,8 @@ const categoriesController = {
     const data = new Categories({
       name: req.body.name,
       isActive: req.body.isActive,
-      createdBy: "admin",
-      restaurant: req.body.restaurant,
+      createdBy: req.user._id,
+      restaurant: req.user.restaurant,
     });
 
     try {
@@ -45,7 +46,7 @@ const categoriesController = {
 
       const options = { new: true };
 
-      req.body.createdBy = "admin";
+      req.body.createdBy = req.user._id;
 
       if (req.body.isActive !== undefined) {
         const categoryData = await Categories.findById(id);

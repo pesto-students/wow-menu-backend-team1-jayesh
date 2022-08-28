@@ -29,20 +29,55 @@ const authController = {
   },
 
   async authenticate(req, res) {
-    res.json({ data: req.user });
+    const { accessToken, refreshToken } = req.user;
+    // delete req.user.accessToken;
+    // delete req.user.refreshToken;
+    res
+      .cookie("accessToken", `Bearer ${accessToken}`, {
+        httponly: true,
+        sameSite: "none",
+        secure: true,
+        maxAge: 1000 * 60 * 30,
+        // expires: 1000 * 60 * 30,
+      })
+      .cookie("refreshToken", `Bearer ${refreshToken}`, {
+        httponly: true,
+        sameSite: "none",
+        secure: true,
+        maxAge: 1000 * 60 * 60 * 24,
+      })
+      .header("Access-Control-Allow-Credentials", true)
+      .header("Origin-Allow-Credentials", true)
+      .json({ data: req.user });
   },
 
   async refreshAccessToken(req, res) {
     const refreshToken = req.headers.authorization.split(" ")[1];
     const data = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET_KEY);
     const accessToken = generateJWTToken(data.payload, "access");
-    res.json({
-      data: {
-        userDetails: data.payload,
-        accessToken,
-        refreshToken,
-      },
-    });
+    res
+      .cookie("accessToken", `Bearer ${accessToken}`, {
+        httponly: true,
+        sameSite: "none",
+        secure: true,
+        maxAge: 1000 * 60 * 30,
+        // expires: 1000 * 60 * 30,
+      })
+      .cookie("refreshToken", `Bearer ${refreshToken}`, {
+        httponly: true,
+        sameSite: "none",
+        secure: true,
+        maxAge: 1000 * 60 * 60 * 24,
+      })
+      .header("Access-Control-Allow-Credentials", true)
+      .header("Origin-Allow-Credentials", true)
+      .json({
+        data: {
+          userDetails: data.payload,
+          accessToken,
+          refreshToken,
+        },
+      });
   },
 
   async logout(req, res, next) {
@@ -75,7 +110,19 @@ const authController = {
             for (const user of data) {
               await new BlackListedTokens(user).save();
             }
-            res.status(200).json({ message: "Logout successfully" });
+            res
+              .status(200)
+              .cookie("accessToken", ``, {
+                httponly: true,
+                sameSite: "none",
+                secure: true,
+              })
+              .cookie("refreshToken", ``, {
+                httponly: true,
+                sameSite: "none",
+                secure: true,
+              })
+              .json({ message: "Logout successfully" });
           } catch (error) {
             next(error);
           }

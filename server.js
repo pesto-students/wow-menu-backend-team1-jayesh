@@ -7,9 +7,21 @@ import mongoose from "mongoose";
 import passport from "passport";
 import ErrorHandlerMiddleware from "./src/middlewares/errorHandlerMiddleware";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: [
+      "http://localhost:3000",
+      "https://wow-menu-customer.netlify.app",
+      "https://wow-menu.netlify.app",
+    ],
+    allowedHeaders: ["Content-Type"],
+  }),
+);
+app.use(cookieParser());
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
