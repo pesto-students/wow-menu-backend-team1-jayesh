@@ -63,15 +63,13 @@ dataSchema.pre("save", async function (next) {
     if (this.role.trim().toLowerCase() === "owner" && !this.emailId) {
       throw new Error(`Email id is required if your role is ${this.role}`);
     }
-    if (
-      this.role.trim().toLowerCase() === "owner" &&
-      !(await isOwnerUniqueForRestaurant(this.restaurant))
-    ) {
+    if (this.role.trim().toLowerCase() === "owner" && this.restaurant) {
       throw new Error(`Multiple owners can't be added for a restaurant`);
     }
     if (this.role.trim().toLowerCase() !== "owner" && !this.username) {
       throw new Error(`Username is required if your role is ${this.role}`);
     }
+    if (!this.isModified("password")) return next();
     this.password = await hashPassword(this.password);
     next();
   } catch (error) {
@@ -79,13 +77,13 @@ dataSchema.pre("save", async function (next) {
   }
 });
 
-async function isOwnerUniqueForRestaurant(restaurantId) {
-  const data = await Users.find({
-    role: "owner",
-    restaurant: restaurantId,
-  });
-  return data.length === 0;
-}
+// async function isOwnerUniqueForRestaurant(restaurantId) {
+//   const data = await Users.find({
+//     role: "owner",
+//     restaurant: restaurantId,
+//   });
+//   return data.length === 0;
+// }
 
 dataSchema.post("save", async function (doc) {
   if (doc.emailId) {

@@ -27,7 +27,7 @@ const restaurantsController = {
       gstNumber: req.body.gstNumber,
       gstPercentage: req.body.gstPercentage,
       totalTables: req.body.totalTables,
-      createdBy: req.user._id,
+      createdBy: req.body.createdBy,
     });
 
     try {
