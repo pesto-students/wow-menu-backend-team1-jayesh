@@ -12,7 +12,7 @@ const localStrategy = new LocalStrategy(
   localOpts,
   async (emailId, password, done) => {
     try {
-      const user = await Users.find({ emailId });
+      const user = await Users.find({ emailId }).populate("restaurant");
       if (user.length === 0) {
         return done(null, false, { message: "Email id is not registered" });
       } else if (
