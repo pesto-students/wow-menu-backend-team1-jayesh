@@ -99,7 +99,12 @@ router.get(
   restaurantsController.get,
 );
 router.get("/restaurant/:id", authAccessToken, restaurantsController.getById);
-router.post("/restaurant", restaurantsValidation, restaurantsController.post);
+router.post(
+  "/restaurant",
+  authAccessToken,
+  restaurantsValidation,
+  restaurantsController.post,
+);
 router.patch(
   "/restaurant/:id",
   authAccessToken,

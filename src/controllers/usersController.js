@@ -44,7 +44,6 @@ const usersController = {
       isVerified,
       restaurant,
       // createdBy: req.user._id,
-
     });
 
     try {
