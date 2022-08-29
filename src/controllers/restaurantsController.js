@@ -37,7 +37,10 @@ const restaurantsController = {
       Object.assign(user, {
         restaurant: result.id,
       });
-      await user.save();
+      await Users.findByIdAndUpdate(req.user._id, user, {
+        new: true,
+      });
+      // await user.save();
       user["password"] = undefined;
       const accessToken = generateJWTToken(user, "access");
       const refreshToken = generateJWTToken(user, "refresh");
