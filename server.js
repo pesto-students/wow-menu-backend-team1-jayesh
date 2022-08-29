@@ -18,7 +18,7 @@ app.use(
       "https://wow-menu-customer.netlify.app",
       "https://wow-menu.netlify.app",
     ],
-    allowedHeaders: ["Content-Type"],
+    allowedHeaders: ["*"],
   }),
 );
 app.use(cookieParser());
