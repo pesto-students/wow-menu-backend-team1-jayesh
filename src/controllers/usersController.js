@@ -43,7 +43,8 @@ const usersController = {
       username,
       isVerified,
       restaurant,
-      createdBy: req.user._id,
+      // createdBy: req.user._id,
+
     });
 
     try {
