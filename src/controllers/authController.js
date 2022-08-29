@@ -30,8 +30,8 @@ const authController = {
 
   async authenticate(req, res) {
     const { accessToken, refreshToken } = req.user;
-    // delete req.user.accessToken;
-    // delete req.user.refreshToken;
+    delete req.user.accessToken;
+    delete req.user.refreshToken;
     res
       .cookie("accessToken", `Bearer ${accessToken}`, {
         httponly: true,
