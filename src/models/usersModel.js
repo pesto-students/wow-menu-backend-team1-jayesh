@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-import { Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import sendMailUtil from "../utils/sendMailUtil";
 import { APP_URL } from "../../config";
 import hashPassword from "../utils/hashPasswordUtil";
