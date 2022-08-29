@@ -13,9 +13,15 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: "*",
+    origin: [
+      "http://localhost:3000",
+      "https://wow-menu-customer.netlify.app",
+      "https://wow-menu.netlify.app",
+    ],
+    allowedHeaders: ["Content-Type"],
   }),
 );
+
 app.use(cookieParser());
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
