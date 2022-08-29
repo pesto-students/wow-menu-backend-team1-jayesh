@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
+import { Schema } from "mongoose";
 import sendMailUtil from "../utils/sendMailUtil";
 import { APP_URL } from "../../config";
 import hashPassword from "../utils/hashPasswordUtil";
-import { Users } from "./index";
+// import { Users } from "./index";
 
 const dataSchema = new mongoose.Schema(
   {
@@ -47,6 +48,10 @@ const dataSchema = new mongoose.Schema(
     },
     restaurant: {
       type: String,
+    },
+    createdBy: {
+      // required: true,
+      type: Schema.Types.ObjectId,
     },
   },
   {
