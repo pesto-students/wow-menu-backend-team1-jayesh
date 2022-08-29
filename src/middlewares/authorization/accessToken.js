@@ -37,7 +37,9 @@ export const authAccessToken = async function (req, res, next) {
           try {
             if (err) res.status(400).json("Invalid token");
             const { payload } = userDetails;
-            const user = await Users.findById(payload.id);
+            const user = await Users.findById(payload.id).populate(
+              "restaurant",
+            );
 
             if (!user) {
               res.status(400).json("Invalid user details");
