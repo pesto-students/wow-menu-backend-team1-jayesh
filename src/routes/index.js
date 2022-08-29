@@ -165,18 +165,8 @@ router.patch(
 );
 router.delete("/orders/:id", authAccessToken, ordersController.deleteOrder);
 
-router.get(
-  "/bills",
-  authAccessToken,
-  billsValidation,
-  billsController.getBills,
-);
-router.get(
-  "/bills/:id",
-  authAccessToken,
-  authAccessToken,
-  billsController.getBillById,
-);
+router.get("/bills", authAccessToken, billsController.getBills);
+router.get("/bills/:id", authAccessToken, billsController.getBillById);
 router.post("/bills", billsValidation, billsController.postBill);
 router.patch(
   "/bills/:id",
@@ -184,12 +174,7 @@ router.patch(
   billsValidation,
   billsController.updateBill,
 );
-router.delete(
-  "/bills/:id",
-  authAccessToken,
-  authAccessToken,
-  billsController.deleteBill,
-);
+router.delete("/bills/:id", authAccessToken, billsController.deleteBill);
 
 router.get("/razorpay/:id", razorpayController.getPaymentDetail);
 router.post("/razorpay/verify", razorpayController.verify);
@@ -202,5 +187,7 @@ router.post(
   "/payByCash/:restaurantId/:tableNo",
   notificationController.payByCash,
 );
+
+router.get("/analytics", authAccessToken, billsController.getAnalytics);
 
 export default router;
