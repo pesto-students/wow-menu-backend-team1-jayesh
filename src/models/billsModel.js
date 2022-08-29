@@ -29,6 +29,10 @@ const billSchema = new Schema(
     total: {
       type: Number,
     },
+    totalQuantity: {
+      type: Number,
+      default: 0,
+    },
     discountPercentage: {
       type: Number,
       default: 0,
