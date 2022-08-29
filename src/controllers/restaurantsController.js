@@ -1,4 +1,5 @@
 import { Restaurants, Users } from "../models";
+import generateJWTToken from "../utils/generateJWTTokenUtil";
 
 const restaurantsController = {
   async get(req, res, next) {
@@ -32,16 +33,35 @@ const restaurantsController = {
 
     try {
       const result = await data.save();
-      const user = await Users.findById(req.body.createdBy);
+      const user = await Users.findById(req.user._id);
       Object.assign(user, {
         restaurant: result.id,
       });
       await user.save();
-      res.status(201).json({
-        message: "Restaurant successfully added",
-        status: true,
-        data: result,
-      });
+      user["password"] = undefined;
+      const accessToken = generateJWTToken(user, "access");
+      const refreshToken = generateJWTToken(user, "refresh");
+      res
+        .status(201)
+        .cookie("accessToken", `Bearer ${accessToken}`, {
+          httponly: true,
+          sameSite: "none",
+          secure: true,
+          maxAge: 1000 * 60 * 30,
+        })
+        .cookie("refreshToken", `Bearer ${refreshToken}`, {
+          httponly: true,
+          sameSite: "none",
+          secure: true,
+          maxAge: 1000 * 60 * 60 * 24,
+        })
+        .header("Access-Control-Allow-Credentials", true)
+        .header("Origin-Allow-Credentials", true)
+        .json({
+          message: "Restaurant successfully added",
+          status: true,
+          data: result,
+        });
     } catch (error) {
       return next(error);
     }

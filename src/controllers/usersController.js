@@ -1,6 +1,5 @@
 import { Users } from "../models";
 import hashPasswordUtil from "../utils/hashPasswordUtil";
-import generateJWTToken from "../utils/generateJWTTokenUtil";
 
 const usersController = {
   async get(req, res, next) {
@@ -44,6 +43,7 @@ const usersController = {
       username,
       isVerified,
       restaurant,
+      createdBy: req.user._id,
     });
 
     try {
@@ -67,14 +67,15 @@ const usersController = {
         req.body.password = await hashPasswordUtil(req.body.password);
       }
 
+      req.body.createdBy = req.user._id;
+
       const result = await Users.findByIdAndUpdate(
         req.params.id,
         req.body,
         options,
       );
-      const token = generateJWTToken(result.password);
       result.password = undefined;
-      const response = { userDetails: result, token };
+      const response = { userDetails: result };
       res.status(200).json({
         message: `User data is successfully updated`,
         status: true,
