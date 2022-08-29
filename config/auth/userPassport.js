@@ -8,7 +8,7 @@ const localStrategy = new LocalStrategy(
   {},
   async (username, password, done) => {
     try {
-      const user = await Users.find({ username });
+      const user = await Users.find({ username }).populate("restaurant");
       if (user.length === 0) {
         return done(null, false, { message: "Username is not registered" });
       } else {

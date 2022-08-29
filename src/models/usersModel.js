@@ -47,7 +47,7 @@ const dataSchema = new mongoose.Schema(
     },
     restaurant: {
       type: Schema.Types.ObjectId,
-      ref: "Restaurants",
+      ref: "Restaurant",
     },
     createdBy: {
       // required: true,
