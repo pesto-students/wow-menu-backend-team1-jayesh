@@ -188,6 +188,6 @@ router.post(
   notificationController.payByCash,
 );
 
-router.get("/analytics", billsController.getAnalytics);
+router.get("/restaurant-info", billsController.getAnalytics);
 
 export default router;
