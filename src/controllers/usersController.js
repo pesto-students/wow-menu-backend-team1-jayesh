@@ -31,8 +31,10 @@ const usersController = {
       emailId,
       username,
       isVerified,
-      restaurant,
     } = req.body;
+
+    const restaurant =
+      role.toLowerCase() !== "owner" ? req.user.restaurant._id : null;
 
     const data = new Users({
       firstname,
