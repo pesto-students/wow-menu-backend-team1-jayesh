@@ -79,7 +79,7 @@ const menuItemsController = {
       spicy: req.body.spicy,
       imageUrl: req.body.imageUrl,
       createdBy: req.user._id,
-      restaurant: req.user.restaurant,
+      restaurant: req.user.restaurant.id,
     });
 
     try {
