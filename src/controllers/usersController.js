@@ -4,6 +4,7 @@ import hashPasswordUtil from "../utils/hashPasswordUtil";
 const usersController = {
   async get(req, res, next) {
     try {
+      req.query.restaurant = req.user.restaurant._id;
       const data = await Users.find(req.query).select("-password");
       res.status(200).json({ status: true, data: data });
     } catch (error) {
