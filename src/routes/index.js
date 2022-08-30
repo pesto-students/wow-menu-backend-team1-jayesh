@@ -98,7 +98,7 @@ router.get(
   restaurantsValidation,
   restaurantsController.get,
 );
-router.get("/restaurant/:id", authAccessToken, restaurantsController.getById);
+router.get("/restaurant/:id", restaurantsController.getById);
 router.post(
   "/restaurant",
   authAccessToken,
