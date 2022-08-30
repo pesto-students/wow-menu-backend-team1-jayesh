@@ -1,6 +1,6 @@
 import { BlackListedTokens, Users } from "../models";
 import jwt from "jsonwebtoken";
-import { REFRESH_TOKEN_SECRET_KEY } from "../../config";
+import { CLIENT_APP_URL, REFRESH_TOKEN_SECRET_KEY } from "../../config";
 import generateJWTToken from "../utils/generateJWTTokenUtil";
 import moment from "moment";
 import isTokenBlackListedUtil from "../utils/isTokenBlackListedUtil";
@@ -15,11 +15,9 @@ const authController = {
           { isVerified: true },
           { new: true },
         );
-        res.status(200).json({
-          message: "Email is successfully verified",
-        });
+        res.status(302).redirect(CLIENT_APP_URL + "?success=true");
       } else {
-        res.status(422).json({ message: "Clicked on invalid link" });
+        res.status(422).redirect(CLIENT_APP_URL + "?success=false");
       }
     } catch (error) {
       res.status(500).json({
