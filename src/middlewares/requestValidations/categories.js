@@ -23,7 +23,7 @@ function getDataSchema(req, res) {
       return Joi.object({
         name: Joi.string().required(),
         isActive: Joi.bool(),
-        restaurant: Joi.string().required(),
+        // restaurant: Joi.string().required(),
       });
     }
     case "PATCH": {
