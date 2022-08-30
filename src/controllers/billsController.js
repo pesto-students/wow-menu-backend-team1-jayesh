@@ -192,6 +192,7 @@ const billsController = {
   },
   async getAnalytics(req, res) {
     try {
+      req.query.restaurant = req.user.restaurant.id;
       const ordersCount = await Bills.find(req.query).count();
       const amounts = await Bills.find(req.query).select("total");
       const qty = await Bills.find(req.query).select("totalQuantity");
