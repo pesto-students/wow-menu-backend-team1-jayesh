@@ -31,28 +31,16 @@ function getDataSchema(req) {
       }
     }
     case "POST": {
-      if (req.path === "/login/owner" || req.path === "/login/owner") {
-        return Joi.object({
-          emailId: Joi.string().email().required(),
-          password: Joi.string().required(),
-        });
-      } else if (req.path === "/login/user" || req.path === "/login/user") {
-        return Joi.object({
-          username: Joi.string().required(),
-          password: Joi.string().required(),
-        });
-      } else {
-        return Joi.object({
-          firstname: Joi.string().required(),
-          lastname: Joi.string().required(),
-          password: Joi.string().required(),
-          isAdmin: Joi.bool(),
-          role: Joi.string().required(),
-          emailId: Joi.string().email(),
-          username: Joi.string(),
-          restaurant: Joi.string(),
-        });
-      }
+      return Joi.object({
+        firstname: Joi.string().required(),
+        lastname: Joi.string().required(),
+        password: Joi.string().required(),
+        isAdmin: Joi.bool(),
+        role: Joi.string().required(),
+        emailId: Joi.string().email(),
+        username: Joi.string(),
+        restaurant: Joi.string(),
+      });
     }
     case "PATCH": {
       if (req.path.includes("owner")) {
