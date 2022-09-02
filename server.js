@@ -1,7 +1,7 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { APP_PORT, DATABASE_URL } from "./config";
+import { APP_PORT, DATABASE_URL, REDIS_URL } from "./config";
 import routes from "./src/routes";
 import mongoose from "mongoose";
 import passport from "passport";
@@ -9,6 +9,20 @@ import ErrorHandlerMiddleware from "./src/middlewares/errorHandlerMiddleware";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 const app = express();
+
+import { createClient } from "redis";
+
+export const redisClient = createClient({
+  url: REDIS_URL,
+  socket: {
+    connectTimeout: 50000,
+  },
+});
+
+redisClient
+  .connect()
+  .then(() => console.log("Connected to redis instance")) // eslint-disable-line
+  .catch((e) => console.log(e)); // eslint-disable-line
 
 app.use(
   cors({

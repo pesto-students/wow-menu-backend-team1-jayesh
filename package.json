@@ -40,6 +40,7 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "razorpay": "^2.8.3",
+    "redis": "4.0.6",
     "socket.io": "^4.5.1"
   },
   "devDependencies": {
