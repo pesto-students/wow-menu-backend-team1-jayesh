@@ -87,6 +87,7 @@ const categoriesController = {
     try {
       const id = req.params.id;
       const { category } = await Categories.findByIdAndDelete(id);
+      await deleteMenuItems(id);
       await burstCache(req.user.restaurant.id);
       res.status(200).json({
         message: `Category ${category} successfully deleted`,
@@ -96,6 +97,14 @@ const categoriesController = {
       return next(error);
     }
   },
+};
+
+const deleteMenuItems = async (category) => {
+  MenuItems.find({ category }, (err, menuItemsData) => {
+    menuItemsData.map(async (row) => {
+      await MenuItems.findByIdAndDelete(row._id);
+    });
+  });
 };
 
 const updateMenuItemsStatus = (categoryData, requestBody, res) => {
