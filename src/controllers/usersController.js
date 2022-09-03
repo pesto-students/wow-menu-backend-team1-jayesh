@@ -1,4 +1,4 @@
-import { Users } from "../models";
+import { Restaurants, Users } from "../models";
 import hashPasswordUtil from "../utils/hashPasswordUtil";
 
 const usersController = {
@@ -34,7 +34,7 @@ const usersController = {
     } = req.body;
 
     const restaurant =
-      role.toLowerCase() !== "owner" ? req.user.restaurant._id : null;
+      role.toLowerCase() !== "owner" ? req.user.restaurant.id : null;
 
     const data = new Users({
       firstname,
@@ -50,7 +50,21 @@ const usersController = {
     });
 
     try {
-      const result = await data.save();
+      let result = await data.save();
+      if (role.toLowerCase() === "owner") {
+        const restaurant = await createRestaurant(result.id);
+        if (restaurant) {
+          result = await Users.findByIdAndUpdate(
+            result.id,
+            { restaurant: restaurant.id },
+            { new: true },
+          );
+          result.restaurant = restaurant;
+        } else {
+          await Users.findByIdAndDelete(result.id);
+          return next({ message: "Unable to create the user" });
+        }
+      }
       result.password = undefined;
       res.status(201).json({
         message: "User successfully added",
@@ -102,5 +116,16 @@ const usersController = {
     }
   },
 };
+
+async function createRestaurant(userId) {
+  const data = new Restaurants({
+    createdBy: userId,
+  });
+  try {
+    return await data.save();
+  } catch (error) {
+    return false;
+  }
+}
 
 export default usersController;
