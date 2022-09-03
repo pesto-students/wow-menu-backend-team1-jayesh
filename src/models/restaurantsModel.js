@@ -3,30 +3,35 @@ import mongoose, { Schema } from "mongoose";
 const dataSchema = new mongoose.Schema(
   {
     name: {
-      required: true,
       type: String,
       trim: true,
+      sparse: true,
+      index: true,
     },
     phoneNumber: {
-      required: true,
       type: String,
     },
     address: {
-      required: false,
-      type: String,
-      trim: false,
+      street: {
+        type: String,
+        trim: false,
+      },
+      pincode: {
+        type: Number,
+      },
+      state: {
+        type: String,
+      },
     },
     gstNumber: {
-      required: true,
       type: String,
     },
     gstPercentage: {
-      required: true,
       type: Number,
     },
     totalTables: {
-      required: true,
       type: Number,
+      default: 1,
     },
     createdBy: {
       required: true,
