@@ -16,7 +16,6 @@ function getDataSchema(req, res) {
       return Joi.object({
         name: Joi.string(),
         phoneNumber: Joi.string(),
-        address: Joi.string(),
         gstNumber: Joi.string(),
         gstPercentage: Joi.number(),
         totalTables: Joi.number(),
@@ -26,7 +25,7 @@ function getDataSchema(req, res) {
       return Joi.object({
         name: Joi.string().required(),
         phoneNumber: Joi.string().required(),
-        address: Joi.string().required(),
+        address: Joi.object().required(),
         gstNumber: Joi.string().required(),
         gstPercentage: Joi.number().required(),
         totalTables: Joi.number().required(),
@@ -37,7 +36,7 @@ function getDataSchema(req, res) {
       return Joi.object({
         name: Joi.string(),
         phoneNumber: Joi.string(),
-        address: Joi.string(),
+        address: Joi.object(),
         gstNumber: Joi.string(),
         gstPercentage: Joi.number(),
         totalTables: Joi.number(),
