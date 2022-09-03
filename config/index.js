@@ -15,4 +15,5 @@ export const {
   RAZORPAY_SECRET_DEV,
   RAZORPAY_WEBHOOK_SECRET,
   REDIS_URL,
+  SENTRY_DSN_URL,
 } = process.env;

@@ -3,6 +3,7 @@ import LocalStrategy from "passport-local";
 import { Users } from "../../src/models";
 import bcrypt from "bcrypt";
 import generateJWTToken from "../../src/utils/generateJWTTokenUtil";
+import * as Sentry from "@sentry/node";
 
 const localStrategy = new LocalStrategy(
   {},
@@ -16,6 +17,7 @@ const localStrategy = new LocalStrategy(
       }
 
       if (user.length === 0) {
+        Sentry.captureMessage("Username/Email is not registered", "warning");
         return done(null, false, {
           message: "Username/Email is not registered",
         });
@@ -35,6 +37,7 @@ const localStrategy = new LocalStrategy(
         }
       }
     } catch (error) {
+      Sentry.captureException(error);
       return done(error);
     }
   },
