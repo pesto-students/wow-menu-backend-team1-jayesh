@@ -34,7 +34,7 @@ const usersController = {
     } = req.body;
 
     const restaurant =
-      role.toLowerCase() !== "owner" ? req.user.restaurant.id : null;
+      role.toLowerCase() !== "owner" ? req.body.restaurant : null;
 
     const data = new Users({
       firstname,
