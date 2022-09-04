@@ -4,22 +4,37 @@ import { CLIENT_APP_URL, REFRESH_TOKEN_SECRET_KEY } from "../../config";
 import generateJWTToken from "../utils/generateJWTTokenUtil";
 import moment from "moment";
 import isTokenBlackListedUtil from "../utils/isTokenBlackListedUtil";
+import { isCached, storeDataInCache } from "../utils/cacheUtil";
+import * as Sentry from "@sentry/node";
 
 const authController = {
   async verifyEmail(req, res) {
     try {
-      const data = await Users.findById(req.query.id);
-      if (req.query.hashedString === data.password) {
-        await Users.findByIdAndUpdate(
-          req.query.id,
-          { isVerified: true },
-          { new: true },
-        );
-        res.status(302).redirect(CLIENT_APP_URL + "?success=true");
+      if (await isCached("verified-mail", req.query.id)) {
+        res.status(410).json({
+          message: "User is already verified and the link is expired",
+        });
       } else {
-        res.status(422).redirect(CLIENT_APP_URL + "?success=false");
+        const data = await Users.findById(req.query.id);
+        if (req.query.hashedString === data.password) {
+          await Users.findByIdAndUpdate(
+            req.query.id,
+            { isVerified: true },
+            { new: true },
+          );
+          await storeDataInCache(
+            "verified-mail",
+            req.query.id,
+            req.query.emailId,
+            true,
+          );
+          res.status(302).redirect(CLIENT_APP_URL + "?success=true");
+        } else {
+          res.status(422).redirect(CLIENT_APP_URL + "?success=false");
+        }
       }
     } catch (error) {
+      Sentry.captureException(error);
       res.status(500).json({
         message: "Unable to verify email. Please try again later.",
       });

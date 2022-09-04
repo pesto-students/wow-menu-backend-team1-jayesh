@@ -24,10 +24,12 @@ export const getCachedData = async (id, key) => {
   return JSON.parse(data);
 };
 
-export const storeDataInCache = async (id, key, data) => {
-  if (data.length) {
+export const storeDataInCache = async (id, key, data, isString = false) => {
+  if (data.length || isString) {
     await redisClient.hSet(id, key, JSON.stringify(data));
-    await redisClient.expire(id, 3600);
+    if (!isString) {
+      await redisClient.expire(id, 3600);
+    }
   }
 };
 
