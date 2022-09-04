@@ -18,9 +18,7 @@ const localStrategy = new LocalStrategy(
 
       if (user.length === 0) {
         Sentry.captureMessage("Username/Email is not registered", "warning");
-        return done(null, false, {
-          message: "Username/Email is not registered",
-        });
+        return done(null, false, "Username/Email is not registered");
       } else {
         if (await bcrypt.compare(password, user[0].password)) {
           const payload = user[0];
@@ -33,7 +31,7 @@ const localStrategy = new LocalStrategy(
             refreshToken,
           });
         } else {
-          return done(null, false);
+          return done(null, false, "Incorrect password");
         }
       }
     } catch (error) {
@@ -53,7 +51,22 @@ const validateEmail = (email) => {
 
 passport.use(localStrategy);
 
-export const authLocalUser = passport.authenticate("local", {
-  session: false,
-  failWithError: false,
-});
+export const authenticateUser = async function (req, res, next) {
+  passport.authenticate(
+    "local",
+    {
+      session: false,
+    },
+    function (err, user, info) {
+      if (err) {
+        Sentry.captureException(err);
+        res.status(401).json({ message: err.message });
+      } else if (info) {
+        res.status(401).json({ message: info });
+      } else {
+        req.user = user;
+        next();
+      }
+    },
+  )(req, res, next);
+};
