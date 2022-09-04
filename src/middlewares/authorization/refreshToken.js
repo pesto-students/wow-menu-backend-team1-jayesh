@@ -16,7 +16,7 @@ export const authRefreshToken = async function (req, res, next) {
         REFRESH_TOKEN_SECRET_KEY,
         async (err, userDetails) => {
           try {
-            if (err) res.status(400).json("Invalid token");
+            if (err) res.status(401).json("Invalid token");
             const { payload } = userDetails;
             const user = await Users.findById(payload.id).populate(
               "restaurant",
@@ -38,7 +38,7 @@ export const authRefreshToken = async function (req, res, next) {
     }
   } else {
     res
-      .status(400)
+      .status(401)
       .json({ message: "Send valid authorization header to access the api" });
   }
 };
