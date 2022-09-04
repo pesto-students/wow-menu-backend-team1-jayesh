@@ -21,7 +21,7 @@ import {
   authValidation,
 } from "../middlewares/requestValidations";
 
-import { authLocalUser } from "../../config/auth/userPassport";
+import { authenticateUser } from "../../config/auth/userPassport";
 import { authAccessToken } from "../middlewares/authorization/accessToken";
 import { authRefreshToken } from "../middlewares/authorization/refreshToken";
 
@@ -116,7 +116,7 @@ router.post("/signup", usersValidation, usersController.post);
 router.post(
   "/login",
   authValidation,
-  authLocalUser,
+  authenticateUser,
   authController.authenticate,
 );
 router.get("/verify/mail", authValidation, authController.verifyEmail);
