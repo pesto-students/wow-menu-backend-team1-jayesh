@@ -7,6 +7,7 @@ import * as Sentry from "@sentry/node";
 export const authAccessToken = async function (req, res, next) {
   if (req.cookies.accessToken) {
     const accessToken = req.cookies.accessToken.split(" ")[1];
+    const refreshToken = req.cookies.refreshToken.split(" ")[1];
     if (await isTokenBlackListedUtil(accessToken)) {
       Sentry.captureMessage("Expired/invalid token passed", "warning");
       res.status(401).json({ message: "Expired/invalid token passed" });
@@ -27,6 +28,8 @@ export const authAccessToken = async function (req, res, next) {
               res.status(400).json("Invalid user details");
             }
 
+            user.accessToken = accessToken;
+            user.refreshToken = refreshToken;
             req.user = user;
             next();
           } catch (e) {
