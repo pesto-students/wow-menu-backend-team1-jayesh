@@ -1,9 +1,7 @@
 import { BlackListedTokens, Users } from "../models";
-import jwt from "jsonwebtoken";
-import { CLIENT_APP_URL, REFRESH_TOKEN_SECRET_KEY } from "../../config";
+import { CLIENT_APP_URL } from "../../config";
 import generateJWTToken from "../utils/generateJWTTokenUtil";
 import moment from "moment";
-import isTokenBlackListedUtil from "../utils/isTokenBlackListedUtil";
 import { isCached, storeDataInCache } from "../utils/cacheUtil";
 import * as Sentry from "@sentry/node";
 
@@ -65,9 +63,9 @@ const authController = {
   },
 
   async refreshAccessToken(req, res) {
-    const refreshToken = req.headers.authorization.split(" ")[1];
-    const data = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET_KEY);
-    const accessToken = generateJWTToken(data.payload, "access");
+    const { refreshToken, userDetails } = req.user;
+    userDetails["password"] = undefined;
+    const accessToken = generateJWTToken(userDetails, "access");
     res
       .cookie("accessToken", `Bearer ${accessToken}`, {
         httponly: true,
@@ -86,7 +84,7 @@ const authController = {
       .header("Origin-Allow-Credentials", true)
       .json({
         data: {
-          userDetails: data.payload,
+          userDetails,
           accessToken,
           refreshToken,
         },
@@ -94,54 +92,40 @@ const authController = {
   },
 
   async logout(req, res, next) {
-    const accessToken = req.headers.authorization.split(" ")[1];
-    const refreshToken = req.body.refreshToken;
-    jwt.verify(
-      refreshToken,
-      REFRESH_TOKEN_SECRET_KEY,
-      async (err, userDetails) => {
-        if (err) {
-          res.status(401).json({ message: "Invalid access token" });
-        } else if (await isTokenBlackListedUtil(refreshToken)) {
-          res.status(401).json({ message: "Invalid refresh token" });
-        } else {
-          const currentTs = new Date();
-          const { payload } = userDetails;
-          const data = [
-            {
-              token: refreshToken,
-              userId: payload.id,
-              expiresAt: moment(currentTs).add("1", "day"),
-            },
-            {
-              token: accessToken,
-              userId: payload.id,
-              expiresAt: moment(currentTs).add("30", "minutes"),
-            },
-          ];
-          try {
-            for (const user of data) {
-              await new BlackListedTokens(user).save();
-            }
-            res
-              .status(200)
-              .cookie("accessToken", ``, {
-                httponly: true,
-                sameSite: "none",
-                secure: true,
-              })
-              .cookie("refreshToken", ``, {
-                httponly: true,
-                sameSite: "none",
-                secure: true,
-              })
-              .json({ message: "Logout successfully" });
-          } catch (error) {
-            next(error);
-          }
-        }
+    const { accessToken, refreshToken, userDetails } = req.user;
+    const currentTs = new Date();
+    const data = [
+      {
+        token: refreshToken,
+        userId: userDetails._id,
+        expiresAt: moment(currentTs).add("1", "day"),
       },
-    );
+      {
+        token: accessToken,
+        userId: userDetails._id,
+        expiresAt: moment(currentTs).add("30", "minutes"),
+      },
+    ];
+    try {
+      for (const user of data) {
+        await new BlackListedTokens(user).save();
+      }
+      res
+        .status(200)
+        .cookie("accessToken", ``, {
+          httponly: true,
+          sameSite: "none",
+          secure: true,
+        })
+        .cookie("refreshToken", ``, {
+          httponly: true,
+          sameSite: "none",
+          secure: true,
+        })
+        .json({ message: "Logout successfully" });
+    } catch (error) {
+      next(error);
+    }
   },
 };
 

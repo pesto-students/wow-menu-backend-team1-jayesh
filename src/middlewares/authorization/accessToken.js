@@ -39,6 +39,6 @@ export const authAccessToken = async function (req, res, next) {
   } else {
     res
       .status(401)
-      .json({ message: "Send valid authorization header to access the api" });
+      .json({ message: "Connection timed out. Please login again." });
   }
 };
