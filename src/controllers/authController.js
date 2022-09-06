@@ -92,17 +92,17 @@ const authController = {
   },
 
   async logout(req, res, next) {
-    const { accessToken, refreshToken, userDetails } = req.user;
+    const { accessToken, refreshToken, _id } = req.user;
     const currentTs = new Date();
     const data = [
       {
         token: refreshToken,
-        userId: userDetails._id,
+        userId: _id,
         expiresAt: moment(currentTs).add("1", "day"),
       },
       {
         token: accessToken,
-        userId: userDetails._id,
+        userId: _id,
         expiresAt: moment(currentTs).add("30", "minutes"),
       },
     ];
