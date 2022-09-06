@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import sendMailUtil from "../utils/sendMailUtil";
 import { APP_URL } from "../../config";
 import hashPassword from "../utils/hashPasswordUtil";
-// import { Users } from "./index";
+import confirmEmailHtmlBody from "../utils/confirmEmailHtmlBody";
 
 const dataSchema = new mongoose.Schema(
   {
@@ -93,14 +93,12 @@ dataSchema.pre("save", async function (next) {
 dataSchema.post("save", async function (doc) {
   if (doc.emailId) {
     const queryParams = `id=${doc["_id"]}&hashedString=${doc["password"]}`;
-    const htmlBody = `<b>Greetings from Wow Menu<b>
-                <br> Click on this link to verify your password <br><br>
-                <link>${APP_URL}/api/verify/mail?${queryParams}</link>`;
+    const linkToRedirect = `${APP_URL}/api/verify/mail?${queryParams}`;
     await sendMailUtil(
       doc.emailId,
       "Wow Menu Verification Mail",
       "Please verify your email id",
-      htmlBody,
+      confirmEmailHtmlBody(linkToRedirect),
     );
   }
 });
