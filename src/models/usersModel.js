@@ -36,10 +36,7 @@ const dataSchema = new mongoose.Schema(
     },
     username: {
       type: String,
-      unique: true,
       trim: true,
-      sparse: true,
-      index: true,
     },
     isVerified: {
       type: Boolean,
@@ -58,6 +55,11 @@ const dataSchema = new mongoose.Schema(
     timestamps: true,
     versionKey: false,
   },
+);
+
+dataSchema.index(
+  { username: 1, restaurant: 1 },
+  { unique: true, sparse: true },
 );
 
 dataSchema.pre("save", async function (next) {
