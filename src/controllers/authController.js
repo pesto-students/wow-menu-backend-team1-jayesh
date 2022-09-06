@@ -122,7 +122,7 @@ const authController = {
           sameSite: "none",
           secure: true,
         })
-        .json({ message: "Logout successfully" });
+        .json({ message: "Logged out successfully" });
     } catch (error) {
       next(error);
     }
