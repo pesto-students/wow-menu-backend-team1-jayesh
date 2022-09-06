@@ -121,7 +121,7 @@ router.post(
 );
 router.get("/verify/mail", authValidation, authController.verifyEmail);
 router.get("/accesstoken", authRefreshToken, authController.refreshAccessToken);
-router.post("/logout", authAccessToken, authValidation, authController.logout);
+router.post("/logout", authAccessToken, authController.logout);
 
 router.get(
   "/orders",
