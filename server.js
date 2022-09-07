@@ -1,7 +1,13 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { APP_PORT, DATABASE_URL, REDIS_URL, SENTRY_DSN_URL } from "./config";
+import {
+  APP_ENV,
+  APP_PORT,
+  DATABASE_URL,
+  REDIS_URL,
+  SENTRY_DSN_URL,
+} from "./config";
 import routes from "./src/routes";
 import mongoose from "mongoose";
 import passport from "passport";
@@ -13,6 +19,7 @@ import * as Tracing from "@sentry/tracing";
 const app = express();
 
 Sentry.init({
+  environment: APP_ENV,
   dsn: SENTRY_DSN_URL,
   integrations: [
     new Sentry.Integrations.Http({ tracing: true }),
