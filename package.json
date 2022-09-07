@@ -1,0 +1,53 @@
+{
+  "name": "wow-menu-backend-team1-jayesh",
+  "version": "1.0.0",
+  "description": "Welcome to Pesto assignments.",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon -r esm server.js",
+    "build": "./build.sh",
+    "start": "node -r esm server.js",
+    "format:check": "prettier --check .",
+    "format:write": "prettier --write .",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "prepare": "  ./prepare.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shubham4agrawal/wow-menu-backend-team1-jayesh.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shubham4agrawal/wow-menu-backend-team1-jayesh/issues"
+  },
+  "homepage": "https://github.com/shubham4agrawal/wow-menu-backend-team1-jayesh#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.0.1",
+    "esm": "^3.2.25",
+    "express": "^4.18.1",
+    "joi": "^17.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.4",
+    "mongoose": "^6.5.0",
+    "nodemailer": "^6.7.7",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "razorpay": "^2.8.3",
+    "socket.io": "^4.5.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.20.0",
+    "eslint-config-prettier": "^8.5.0",
+    "husky": "^8.0.0",
+    "nodemon": "^2.0.19",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2"
+  }
+}
