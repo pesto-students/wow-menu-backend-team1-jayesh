@@ -39,7 +39,7 @@ function getDataSchema(req, res) {
     case "POST": {
       return Joi.object({
         name: Joi.string().required(),
-        description: Joi.string().required(),
+        description: Joi.string().allow(""), //.required()
         price: Joi.number().required(),
         discountedPrice: Joi.number(),
         category: Joi.string().required(),
@@ -47,13 +47,13 @@ function getDataSchema(req, res) {
         isActive: Joi.bool(),
         isVeg: Joi.bool().required(),
         spicy: Joi.string(),
-        imageUrl: Joi.string(),
+        imageUrl: Joi.string().allow(""),
       });
     }
     case "PATCH": {
       return Joi.object({
         name: Joi.string(),
-        description: Joi.string(),
+        description: Joi.string().allow(""),
         price: Joi.number(),
         discountedPrice: Joi.number(),
         category: Joi.string(),
@@ -61,7 +61,7 @@ function getDataSchema(req, res) {
         isActive: Joi.bool(),
         isVeg: Joi.bool(),
         spicy: Joi.string(),
-        imageUrl: Joi.string(),
+        imageUrl: Joi.string().allow(""),
       });
     }
     default: {

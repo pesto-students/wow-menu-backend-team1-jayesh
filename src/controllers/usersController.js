@@ -1,9 +1,10 @@
-import { Users } from "../models";
+import { Restaurants, Users } from "../models";
 import hashPasswordUtil from "../utils/hashPasswordUtil";
 
 const usersController = {
   async get(req, res, next) {
     try {
+      req.query.restaurant = req.user.restaurant._id;
       const data = await Users.find(req.query).select("-password");
       res.status(200).json({ status: true, data: data });
     } catch (error) {
@@ -30,8 +31,10 @@ const usersController = {
       emailId,
       username,
       isVerified,
-      restaurant,
     } = req.body;
+
+    const restaurant =
+      role.toLowerCase() !== "owner" ? req.body.restaurant : null;
 
     const data = new Users({
       firstname,
@@ -47,7 +50,21 @@ const usersController = {
     });
 
     try {
-      const result = await data.save();
+      let result = await data.save();
+      if (role.toLowerCase() === "owner") {
+        const restaurant = await createRestaurant(result.id);
+        if (restaurant) {
+          result = await Users.findByIdAndUpdate(
+            result.id,
+            { restaurant: restaurant.id },
+            { new: true },
+          );
+          result.restaurant = restaurant;
+        } else {
+          await Users.findByIdAndDelete(result.id);
+          return next({ message: "Unable to create the user" });
+        }
+      }
       result.password = undefined;
       res.status(201).json({
         message: "User successfully added",
@@ -99,5 +116,16 @@ const usersController = {
     }
   },
 };
+
+async function createRestaurant(userId) {
+  const data = new Restaurants({
+    createdBy: userId,
+  });
+  try {
+    return await data.save();
+  } catch (error) {
+    return false;
+  }
+}
 
 export default usersController;

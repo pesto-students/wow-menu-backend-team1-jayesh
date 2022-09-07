@@ -1,4 +1,11 @@
 import { MenuItems } from "../models";
+import {
+  burstCache,
+  getCachedData,
+  getKey,
+  isCached,
+  storeDataInCache,
+} from "../utils/cacheUtil";
 
 const menuItemsController = {
   async get(req, res, next) {
@@ -12,14 +19,21 @@ const menuItemsController = {
           $options: "i",
         };
       }
-      if (req.query.limit) {
-        const { pageNo, limit } = req.query;
-        data = await MenuItems.find(req.query)
-          .skip((pageNo - 1) * limit)
-          .limit(limit)
-          .populate("category");
+
+      const key = await getKey(req);
+      if (await isCached(req.query.restaurant, key)) {
+        data = await getCachedData(req.query.restaurant, key);
       } else {
-        data = await MenuItems.find(req.query).populate("category");
+        if (req.query.limit) {
+          const { pageNo, limit } = req.query;
+          data = await MenuItems.find(req.query)
+            .skip((pageNo - 1) * limit)
+            .limit(limit)
+            .populate("category");
+        } else {
+          data = await MenuItems.find(req.query).populate("category");
+        }
+        await storeDataInCache(req.query.restaurant, key, data);
       }
       res.status(200).json({ status: true, data: data });
     } catch (error) {
@@ -84,6 +98,7 @@ const menuItemsController = {
 
     try {
       await data.save();
+      await burstCache(req.user.restaurant.id);
       res.status(201).json({
         message: "Menu item successfully added",
         status: true,
@@ -103,6 +118,7 @@ const menuItemsController = {
       const result = await MenuItems.findByIdAndUpdate(id, req.body, {
         new: true,
       });
+      await burstCache(req.user.restaurant.id);
       res.status(200).json({
         message: "Menu item is updated successfully",
         status: true,
@@ -117,6 +133,7 @@ const menuItemsController = {
     try {
       const id = req.params.id;
       const { name } = await MenuItems.findByIdAndDelete(id);
+      await burstCache(req.user.restaurant.id);
       res.status(200).json({
         message: `Menu item successfully deleted with name ${name}`,
         status: true,

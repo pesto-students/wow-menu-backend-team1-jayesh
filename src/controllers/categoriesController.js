@@ -1,10 +1,23 @@
 import { Categories, MenuItems } from "../models";
+import {
+  burstCache,
+  getCachedData,
+  getKey,
+  isCached,
+  storeDataInCache,
+} from "../utils/cacheUtil";
 
 const categoriesController = {
   async get(req, res, next) {
     try {
-      // req.query.restaurant = req.user.restaurant;
-      const data = await Categories.find(req.query);
+      let data;
+      const key = await getKey(req);
+      if (await isCached(req.query.restaurant, key)) {
+        data = await getCachedData(req.query.restaurant, key);
+      } else {
+        data = await Categories.find(req.query);
+        await storeDataInCache(req.query.restaurant, key, data);
+      }
       res.status(200).json({ status: true, data: data });
     } catch (error) {
       return next(error);
@@ -30,6 +43,7 @@ const categoriesController = {
 
     try {
       const result = await data.save();
+      await burstCache(req.user.restaurant.id);
       res.status(201).json({
         message: "Category successfully added",
         status: true,
@@ -58,6 +72,7 @@ const categoriesController = {
       }
 
       const result = await Categories.findByIdAndUpdate(id, req.body, options);
+      await burstCache(req.user.restaurant.id);
       res.status(200).json({
         message: "Category successfully updated",
         status: true,
@@ -72,6 +87,8 @@ const categoriesController = {
     try {
       const id = req.params.id;
       const { category } = await Categories.findByIdAndDelete(id);
+      await deleteMenuItems(id);
+      await burstCache(req.user.restaurant.id);
       res.status(200).json({
         message: `Category ${category} successfully deleted`,
         status: true,
@@ -80,6 +97,14 @@ const categoriesController = {
       return next(error);
     }
   },
+};
+
+const deleteMenuItems = async (category) => {
+  MenuItems.find({ category }, (err, menuItemsData) => {
+    menuItemsData.map(async (row) => {
+      await MenuItems.findByIdAndDelete(row._id);
+    });
+  });
 };
 
 const updateMenuItemsStatus = (categoryData, requestBody, res) => {

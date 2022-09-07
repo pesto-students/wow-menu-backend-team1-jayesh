@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import sendMailUtil from "../utils/sendMailUtil";
 import { APP_URL } from "../../config";
 import hashPassword from "../utils/hashPasswordUtil";
-// import { Users } from "./index";
+import confirmEmailHtmlBody from "../utils/confirmEmailHtmlBody";
 
 const dataSchema = new mongoose.Schema(
   {
@@ -36,10 +36,7 @@ const dataSchema = new mongoose.Schema(
     },
     username: {
       type: String,
-      unique: true,
       trim: true,
-      sparse: true,
-      index: true,
     },
     isVerified: {
       type: Boolean,
@@ -58,6 +55,11 @@ const dataSchema = new mongoose.Schema(
     timestamps: true,
     versionKey: false,
   },
+);
+
+dataSchema.index(
+  { username: 1, restaurant: 1 },
+  { unique: true, sparse: true },
 );
 
 dataSchema.pre("save", async function (next) {
@@ -93,14 +95,12 @@ dataSchema.pre("save", async function (next) {
 dataSchema.post("save", async function (doc) {
   if (doc.emailId) {
     const queryParams = `id=${doc["_id"]}&hashedString=${doc["password"]}`;
-    const htmlBody = `<b>Greetings from Wow Menu<b>
-                <br> Click on this link to verify your password <br><br>
-                <link>${APP_URL}/api/verify/mail?${queryParams}</link>`;
+    const linkToRedirect = `${APP_URL}/api/verify/mail?${queryParams}`;
     await sendMailUtil(
       doc.emailId,
       "Wow Menu Verification Mail",
       "Please verify your email id",
-      htmlBody,
+      confirmEmailHtmlBody(linkToRedirect),
     );
   }
 });

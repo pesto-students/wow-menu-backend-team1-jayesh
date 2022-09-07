@@ -1,14 +1,39 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { APP_PORT, DATABASE_URL } from "./config";
+import { APP_PORT, DATABASE_URL, REDIS_URL, SENTRY_DSN_URL } from "./config";
 import routes from "./src/routes";
 import mongoose from "mongoose";
 import passport from "passport";
 import ErrorHandlerMiddleware from "./src/middlewares/errorHandlerMiddleware";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import * as Sentry from "@sentry/node";
+import * as Tracing from "@sentry/tracing";
 const app = express();
+
+Sentry.init({
+  dsn: SENTRY_DSN_URL,
+  integrations: [
+    new Sentry.Integrations.Http({ tracing: true }),
+    new Tracing.Integrations.Express({ app }),
+  ],
+  tracesSampleRate: 1.0,
+});
+
+import { createClient } from "redis";
+
+export const redisClient = createClient({
+  url: REDIS_URL,
+  socket: {
+    connectTimeout: 50000,
+  },
+});
+
+redisClient
+  .connect()
+  .then(() => console.log("Connected to redis instance")) // eslint-disable-line
+  .catch((e) => console.log(e)); // eslint-disable-line
 
 app.use(
   cors({
@@ -43,11 +68,24 @@ mongoose.set("toJSON", {
   },
 });
 
+app.use(Sentry.Handlers.requestHandler());
+app.use(Sentry.Handlers.tracingHandler());
+
 app.use(express.json());
 app.use("/api", routes);
 
 app.use(passport.initialize());
 
+app.use(
+  Sentry.Handlers.errorHandler({
+    shouldHandleError(error) {
+      if (error.status >= 400) {
+        return true;
+      }
+      return false;
+    },
+  }),
+);
 app.use(ErrorHandlerMiddleware);
 
 app.use((req, res) =>

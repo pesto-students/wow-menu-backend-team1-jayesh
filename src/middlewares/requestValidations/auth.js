@@ -19,21 +19,10 @@ function getDataSchema(req) {
       });
     }
     case "POST": {
-      if (req.path === "/login/owner" || req.path === "/login/owner") {
-        return Joi.object({
-          emailId: Joi.string().email().required(),
-          password: Joi.string().required(),
-        });
-      } else if (req.path === "/login/user" || req.path === "/login/user") {
-        return Joi.object({
-          username: Joi.string().required(),
-          password: Joi.string().required(),
-        });
-      } else if (req.path === "/logout" || req.path === "/logout/") {
-        return Joi.object({
-          refreshToken: Joi.string().required(),
-        });
-      }
+      return Joi.object({
+        username: Joi.string().required(),
+        password: Joi.string().required(),
+      });
     }
   }
 }
