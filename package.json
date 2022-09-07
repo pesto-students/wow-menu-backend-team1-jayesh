@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shubham4agrawal/wow-menu-backend-team1-jayesh.git"
+    "url": "git+https://github.com/pesto-students/wow-menu-backend-team1-jayesh.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/shubham4agrawal/wow-menu-backend-team1-jayesh/issues"
+    "url": "https://github.com/pesto-students/wow-menu-backend-team1-jayesh/issues"
   },
-  "homepage": "https://github.com/shubham4agrawal/wow-menu-backend-team1-jayesh#readme",
+  "homepage": "https://github.com/pesto-students/wow-menu-backend-team1-jayesh#readme",
   "dependencies": {
     "@sentry/node": "^7.12.1",
     "@sentry/tracing": "^7.12.1",
