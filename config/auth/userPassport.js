@@ -19,7 +19,7 @@ const localStrategy = new LocalStrategy(
       if (user.length === 0) {
         Sentry.captureMessage("Username/Email is not registered", "warning");
         return done(null, false, "Username/Email is not registered");
-      } else if (!user[0].isVerified) {
+      } else if (user[0].role === "owner" && !user[0].isVerified) {
         return done(null, false, "Please verify your account to login");
       } else {
         if (await bcrypt.compare(password, user[0].password)) {
