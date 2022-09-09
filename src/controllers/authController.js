@@ -63,9 +63,11 @@ const authController = {
   },
 
   async refreshAccessToken(req, res) {
-    const { refreshToken, userDetails } = req.user;
-    userDetails["password"] = undefined;
-    const accessToken = generateJWTToken(userDetails, "access");
+    let { refreshToken } = req.user;
+    delete req.user.password;
+    delete req.user.refreshToken;
+    const accessToken = generateJWTToken(req.user, "access");
+    refreshToken = generateJWTToken(req.user, "refresh");
     res
       .cookie("accessToken", `Bearer ${accessToken}`, {
         httponly: true,
@@ -84,9 +86,7 @@ const authController = {
       .header("Origin-Allow-Credentials", true)
       .json({
         data: {
-          userDetails,
-          accessToken,
-          refreshToken,
+          userDetails: req.user,
         },
       });
   },
