@@ -9,9 +9,7 @@ const authController = {
   async verifyEmail(req, res) {
     try {
       if (await isCached("verified-mail", req.query.id)) {
-        res.status(410).json({
-          message: "User is already verified and the link is expired",
-        });
+        res.status(410).redirect(CLIENT_APP_URL + "?success=false&errorCode=3");
       } else {
         const data = await Users.findById(req.query.id);
         if (req.query.hashedString === data.password) {
@@ -28,14 +26,14 @@ const authController = {
           );
           res.status(302).redirect(CLIENT_APP_URL + "?success=true");
         } else {
-          res.status(422).redirect(CLIENT_APP_URL + "?success=false");
+          res
+            .status(422)
+            .redirect(CLIENT_APP_URL + "?success=false&errorCode=2");
         }
       }
     } catch (error) {
       Sentry.captureException(error);
-      res.status(500).json({
-        message: "Unable to verify email. Please try again later.",
-      });
+      res.status(500).redirect(CLIENT_APP_URL + "?success=false&errorCode=1");
     }
   },
 
