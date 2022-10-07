@@ -1,6 +1,6 @@
 # WOW Menu
 
-![WOW Menu Logo](./public/images/Logo.png)
+![WOW Menu Logo](https://github.com/pesto-students/wow-menu-frontend-team1-jayesh/blob/master/public/images/Logo.png?raw=true)
 
 A web application that a restaurant can use to store their menu along with pictures,
 prices , and waiting time. The customers visiting the restaurant can scan the QR
