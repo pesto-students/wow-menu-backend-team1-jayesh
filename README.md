@@ -35,7 +35,7 @@ Please Note:
 | Manager without Admin Access | akhan | password12 |
 | Chef | mreddy | password12 |
 
-![Demo QR for Customer](./public/images/CustomerLink.png)
+![Demo QR for Customer](https://github.com/pesto-students/wow-menu-frontend-team1-jayesh/blob/master/public/images/CustomerLink.png?raw=true)
 
 ## Installation
 
